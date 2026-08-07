@@ -75,15 +75,8 @@ Enter target URL (e.g., https://www.hackthissite.org/)
 
 Watch the scanner crawl, attack, and report
 
-Example Output
-text
-   ███████╗██╗   ██╗██████╗  █████╗ ███████╗██╗  ██╗ █████╗ ███╗   ██╗
-   ██╔════╝██║   ██║██╔══██╗██╔══██╗██╔════╝██║  ██║██╔══██╗████╗  ██║
-   ███████╗██║   ██║██████╔╝███████║███████╗███████║███████║██╔██╗ ██║
-   ╚════██║██║   ██║██╔══██╗██╔══██║╚════██║██╔══██║██╔══██║██║╚██╗██║
-   ███████║╚██████╔╝██████╔╝██║  ██║███████║██║  ██║██║  ██║██║ ╚████║
-   ╚══════╝ ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝
-
+## Example Output
+   
    Enterprise DAST Engine for Modern Web Applications
    Cuts through web vulnerabilities.
    Author: Nilanjan Chowdhury
@@ -154,7 +147,7 @@ LinkedIn: Nilanjan Chowdhury
 
 Medium: @nilanjan.calculus
 
-Contributing
+## For Contributing
 Fork the repository
 
 Create a feature branch
