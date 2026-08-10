@@ -1,113 +1,96 @@
-# SUDARSHAN — Enterprise DAST Engine
+SUDARSHAN
+Enterprise DAST Engine for Modern Web Applications
 
-**Enterprise-grade Dynamic Application Security Testing (DAST) Engine for modern web applications.**
+Cuts through web vulnerabilities.
 
-Built with modular architecture, extensible rule sets, and multi-format reporting.
+Show Image Show Image Show Image Show Image
 
----
+</div>
+Overview
 
-## Features
+SUDARSHAN is a modular Dynamic Application Security Testing (DAST) engine built to discover and report web application vulnerabilities at scale. It crawls a target application, launches configurable attack payloads against every discovered URL and form, and produces both machine-readable and human-readable vulnerability reports — all wrapped in a hacker-styled terminal UI.
 
-- **Modular Architecture** — Crawler, Engine, Reporter
-- **Customizable Rules** — JSON-based rule sets
-- **Multi-Format Reports** — JSON + HTML
-- **Hacker Terminal UI** — ASCII banner, color-coded output, progress spinner
-- **Built for Scale** — Modular design for easy extension
+Named after the discus of Vishnu — a weapon that cuts through anything in its path — SUDARSHAN is built to slice through the attack surface of modern web apps.
 
----
+⚠️ For authorized security testing only. Only scan applications you own or have explicit written permission to test. See Legal & Ethical Use.
 
-## Results
-
-Tested against `https://www.hackthissite.org/`:
-
-- **Pages Crawled:** 10
-- **Forms Found:** 13
-- **Vulnerabilities Found:** **136**
-
----
-
-## Architecture
+Features
+Capability	Description
+🕷️ Modular Architecture	Independent crawler, engine, and reporter components — swap or extend any layer
+📜 Rule-Based Detection	Vulnerability checks defined declaratively in rules/dast_rules.json
+📊 Multi-Format Reporting	Auto-generated JSON (machine-readable) and HTML (human-readable) reports
+🖥️ Hacker Terminal UI	ASCII banner, color-coded findings, live progress spinner
+⚙️ Built for Scale	Clean separation of concerns for easy extension into new attack classes
+Architecture
 SUDARSHAN/
 ├── crawler/
-│ └── crawler.py # Discovers pages and forms
+│   └── crawler.py       # Discovers pages, links, and forms on the target
 ├── engine/
-│ └── engine.py # Tests payloads on URLs and forms
+│   └── engine.py        # Fires payloads at discovered URLs and forms
 ├── reporter/
-│ └── reporter.py # Generates JSON and HTML reports
+│   └── reporter.py       # Renders findings into JSON and HTML reports
 ├── rules/
-│ └── dast_rules.json # Custom vulnerability detection rules
-├── main.py # Entry point
-├── requirements.txt # Python dependencies
-├── LICENSE # MIT License
-└── README.md # This file
+│   └── dast_rules.json  # Declarative vulnerability detection rules
+├── main.py               # CLI entry point / orchestrator
+├── requirements.txt      # Python dependencies
+├── LICENSE                # MIT License
+└── README.md
 
-text
+Flow: crawler maps the attack surface → engine tests it against rules → reporter compiles the results.
 
----
-
-## Installation
-
-### Clone the Repository
-
-```bash
+Installation
+Clone the repository
+bash
 git clone https://github.com/CalculusGuy/SUDARSHAN.git
 cd SUDARSHAN
-```
-Install Dependencies
-Option 1: Virtual Environment (Recommended)
-```bash
+Set up a virtual environment (recommended)
+bash
 python3 -m venv venv
-source venv/bin/activate
+source venv/bin/activate      # Windows: venv\Scripts\activate
 pip install -r requirements.txt
-```
-Option 2: System-wide (Not Recommended)
-```bash
-pip install -r requirements.txt
-```
-Run SUDARSHAN
-```bash
-python3 main.py
-```
 Usage
-Run python3 main.py
+bash
+python3 main.py
 
-Enter target URL (e.g., https://www.hackthissite.org/)
+You'll be prompted for a target URL:
 
-Watch the scanner crawl, attack, and report
+[?] Enter target URL: https://example.com
 
-## Example Output
-   
-   Enterprise DAST Engine for Modern Web Applications
-   Cuts through web vulnerabilities.
-   Author: Nilanjan Chowdhury
-   GitHub: github.com/CalculusGuy/SUDARSHAN
+SUDARSHAN will then crawl the target, test discovered pages and forms, and write out scan_report.json and scan_report.html.
 
-[?] Enter target URL: https://www.hackthissite.org/
+Sample run
+ Enterprise DAST Engine for Modern Web Applications
+ Cuts through web vulnerabilities.
+ Author: Nilanjan Chowdhury  |  github.com/CalculusGuy/SUDARSHAN
 
-[*] Scanning: https://www.hackthissite.org/
-[*] Crawling pages /
+[?] Enter target URL: https://target-app.example
+
+[*] Crawling target...
 [+] Found 10 pages, 13 forms
-[*] Testing URLs...
-[+] Testing: https://www.hackthissite.org/
-[!] Cross-Site Scripting (XSS) Detection found! Payload: <script>alert(1)</script>
-...
 
-[+] Scan complete! Found 136 vulnerabilities.
-[+] Reports saved to scan_report.json and scan_report.html
+[*] Testing URLs and forms...
+[!] Cross-Site Scripting (XSS) detected → payload: <script>alert(1)</script>
+[!] SQL Injection detected → payload: ' OR '1'='1
+
+[+] Scan complete! 136 findings.
+[+] Reports saved → scan_report.json, scan_report.html
 Reports
-JSON Report (scan_report.json)
+
+JSON (scan_report.json) — for pipelines, tooling, and further automation:
+
 json
 {
-  "target": "https://www.hackthissite.org/",
+  "target": "https://example.com",
   "scan_date": "2026-08-08T02:23:34.969741",
   "total_findings": 136,
-  "findings": [...]
+  "findings": [ ]
 }
-HTML Report (scan_report.html)
-Human-readable report with vulnerability details.
+
+HTML (scan_report.html) — a readable report for humans, with per-finding severity, CWE mapping, and payload detail.
 
 Custom Rules
-Add or modify rules in rules/dast_rules.json:
+
+Detection logic lives entirely in rules/dast_rules.json — no code changes needed to add a new check:
 
 json
 {
@@ -117,41 +100,46 @@ json
   "severity": "Critical",
   "cwe": "CWE-89",
   "description": "Detects SQL injection vulnerabilities.",
-  "attack_vectors": [...],
-  "detection": {...}
+  "attack_vectors": [ ],
+  "detection": { }
 }
-Upcoming Features (Phase 2)
-CLI Support — sudarshan --target https://example.com
+Field Results
 
-Concurrency — ThreadPoolExecutor for parallel scanning
+Tested against hackthissite.org (a legal, purpose-built pentesting sandbox):
 
-More Rules — XXE, CSRF, JWT, etc.
+Metric	Result
+Pages crawled	10
+Forms found	13
+Vulnerabilities found	136
+Roadmap (Phase 2)
+ CLI flags — sudarshan --target https://example.com
+ Concurrency — ThreadPoolExecutor for parallel scanning
+ Expanded rule set — XXE, CSRF, JWT abuse, and more
+ Docker support — containerized deployment
+ CI/CD integration — GitHub Actions workflow
+ Auth support — login forms, tokens, session cookies
+ Proxy support — Burp Suite integration
+Legal & Ethical Use
 
-Docker Support — Containerized deployment
+## SUDARSHAN is intended strictly for authorized security testing — your own applications, or targets where you hold explicit written permission (e.g. a bug bounty scope or a sanctioned pentest engagement). Scanning systems without authorization is illegal in most jurisdictions. The author assumes no liability for misuse.
 
-CI/CD Integration — GitHub Actions workflow
+## Contributing
 
-Authentication — Login forms, tokens, cookies
+Fork the repository
+Create a feature branch (git checkout -b feature/your-feature)
+Commit your changes
+Open a pull request
 
-Proxy Support — Burp Suite integration
+Bug reports and rule contributions are especially welcome.
 
 ## License
-MIT License — see LICENSE file.
+
+Released under the MIT License.
 
 ## Author
+
 Nilanjan Chowdhury
 
-GitHub: CalculusGuy
+<div align="center">
 
-LinkedIn: Nilanjan Chowdhury
-
-Medium: @nilanjan.calculus
-
-## For Contributing
-Fork the repository
-
-Create a feature branch
-
-Submit a pull request
-
-SUDARSHAN — Cuts through web vulnerabilities. 
+SUDARSHAN — cuts through web vulnerabilities.
