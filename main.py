@@ -2,7 +2,8 @@
 # SUDARSHAN — Enterprise DAST Engine
 # Author: Nilanjan Chowdhury
 # GitHub: github.com/CalculusGuy/SUDARSHAN
-
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 import json
 import time
 import sys
