@@ -18,7 +18,7 @@ def test_url(target_url, rules):
                     if method.upper() == "GET":
                         response = requests.get(attack_url, timeout=5)
                     else:
-                        response = requests.post(attack_url, timeout=5)
+                        response = requests.get(attack_url, timeout=5, verify=False)
                     for indicator in rule["detection"].get("response_indicators", []):
                         if indicator.lower() in response.text.lower():
                             findings.append({
