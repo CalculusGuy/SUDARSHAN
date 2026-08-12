@@ -16,7 +16,7 @@ def crawl(target_url, max_pages=10):
 
         try:
             print(f"[*] Crawling: {url}")
-            response = requests.get(url, timeout=5)
+            response = requests.get(url, timeout=5, verify=False)
             visited.add(url)
 
             if response.status_code == 200:
