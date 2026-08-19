@@ -2,6 +2,8 @@
 
 ### Enterprise-Oriented Dynamic Application Security Testing Engine
 
+### Author : Nilanjan Chowdhury (CalculusGuy)
+
 **SUDARSHAN** is a modular **DAST engine written from scratch in Python** for automated discovery and security testing of modern web applications.
 
 It combines crawling, concurrent security testing, custom vulnerability rules, structured reporting, logging, automated testing, and CI/CD integration into a single security-testing workflow.
