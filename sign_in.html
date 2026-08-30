@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sign in — SUDARSHAN</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800;900&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0c0f;
+    --bg-2:#0d1013;
+    --panel:#12161b;
+    --panel-2:#171c22;
+    --border:#242a32;
+    --border-soft:#1b2028;
+    --steel:#6f7887;
+    --text:#eef0f3;
+    --text-dim:#8991a0;
+    --ember:#ff5a24;
+    --ember-dim:#c94215;
+    --ember-glow:rgba(255,90,36,0.35);
+    --crimson:#ff2d55;
+    --chrome:#c9cfd8;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    min-height:100vh;
+    background:
+      radial-gradient(ellipse 900px 500px at 82% -10%, rgba(255,90,36,0.10), transparent 60%),
+      var(--bg);
+    color:var(--text);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+    display:flex;
+    flex-direction:column;
+  }
+  ::selection{background:var(--ember);color:#0a0c0f;}
+  a{color:inherit;}
+
+  header{
+    padding:24px 32px;
+    display:flex;align-items:center;gap:10px;
+  }
+  .brand-mark{width:20px;height:20px;flex-shrink:0;}
+  .brand-name{
+    font-family:'Big Shoulders Display',sans-serif;
+    font-weight:800;font-size:17px;letter-spacing:0.5px;
+  }
+  .brand-name em{font-style:normal;color:var(--ember);}
+
+  main{
+    flex:1;display:flex;align-items:center;justify-content:center;
+    padding:24px;
+  }
+
+  .card{
+    width:100%;max-width:400px;
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:5px;
+    padding:38px 36px 32px;
+  }
+  .card h1{
+    font-family:'Big Shoulders Display',sans-serif;
+    font-weight:800;font-size:27px;
+    margin-bottom:8px;
+  }
+  .card p.sub{
+    font-size:13.5px;color:var(--text-dim);line-height:1.5;
+    margin-bottom:28px;
+  }
+
+  .form-group{margin-bottom:16px;}
+  .form-group label{
+    display:block;font-size:12px;color:var(--steel);
+    margin-bottom:6px;font-weight:600;
+  }
+  .form-group input{
+    width:100%;background:var(--bg-2);border:1px solid var(--border);
+    color:var(--text);padding:11px 12px;font-family:'IBM Plex Mono',monospace;
+    font-size:13.5px;border-radius:3px;transition:border-color .15s;
+  }
+  .form-group input:focus{outline:none;border-color:var(--ember);}
+  .form-group input.invalid{border-color:var(--crimson);}
+
+  .form-foot{
+    display:flex;justify-content:space-between;align-items:center;
+    margin:4px 0 20px;
+  }
+  .remember{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--text-dim);}
+  .remember input{accent-color:var(--ember);}
+  .forgot{font-size:12.5px;color:var(--steel);text-decoration:none;}
+  .forgot:hover{color:var(--text);}
+
+  button.signin-btn{
+    width:100%;background:var(--ember);color:#100a06;font-weight:700;
+    font-size:14.5px;padding:13px;border:none;border-radius:3px;cursor:pointer;
+    transition:box-shadow .2s, opacity .15s;
+  }
+  button.signin-btn:hover{box-shadow:0 0 22px 1px var(--ember-glow);}
+  button.signin-btn:disabled{opacity:.55;cursor:not-allowed;box-shadow:none;}
+
+  .error-msg{
+    display:none;
+    font-size:12.5px;color:var(--crimson);
+    background:rgba(255,45,85,0.08);border:1px solid rgba(255,45,85,0.25);
+    border-radius:3px;padding:10px 12px;margin-bottom:16px;
+  }
+  .error-msg.show{display:block;}
+
+  .demo-note{
+    margin-top:24px;padding-top:20px;border-top:1px solid var(--border-soft);
+    font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--text-dim);line-height:1.7;
+  }
+  .demo-note .tag{color:var(--ember);}
+  .demo-note code{color:var(--chrome);}
+
+  footer{
+    padding:24px 32px;text-align:center;
+    font-size:12.5px;color:var(--text-dim);
+  }
+  footer a{color:var(--text-dim);text-decoration:none;border-bottom:1px solid var(--border);}
+  footer a:hover{color:var(--text);}
+</style>
+</head>
+<body>
+
+<header>
+  <svg class="brand-mark" viewBox="0 0 24 24" fill="none">
+    <circle cx="12" cy="12" r="10" stroke="#ff5a24" stroke-width="1.6"/>
+    <path d="M12 2v4M12 18v4M22 12h-4M6 12H2M19.07 4.93l-2.83 2.83M7.76 16.24l-2.83 2.83M19.07 19.07l-2.83-2.83M7.76 7.76 4.93 4.93" stroke="#ff5a24" stroke-width="1.4" stroke-linecap="round"/>
+    <circle cx="12" cy="12" r="3.2" fill="#ff5a24"/>
+  </svg>
+  <div class="brand-name">SUDARSHAN<em>://</em>DAST</div>
+</header>
+
+<main>
+  <div class="card">
+    <h1>Sign in to scan</h1>
+    <p class="sub">Authenticate to launch a scan and view live results. Browsing the docs and roadmap doesn't require an account.</p>
+
+    <div class="error-msg" id="errorMsg">Incorrect email or password.</div>
+
+    <form id="signinForm">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="you@example.com" required />
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="••••••••" required />
+      </div>
+      <div class="form-foot">
+        <label class="remember"><input type="checkbox" id="remember" checked /> Stay signed in</label>
+        <a class="forgot" href="#">Forgot password?</a>
+      </div>
+      <button type="submit" class="signin-btn" id="signinBtn">Sign in</button>
+    </form>
+
+    <div class="demo-note">
+      <span class="tag">[DEMO]</span> No backend auth is wired up yet — this screen checks against a
+      demo account so you can try the flow.<br>
+      Email: <code>demo@sudarshan.dev</code> · Password: <code>sudarshan</code>
+    </div>
+  </div>
+</main>
+
+<footer>
+  Built by <a href="https://calculusguy.github.io/nilanjanchowdhury.github.io/" target="_blank">Nilanjan Chowdhury (@CalculusGuy)</a>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  // If already signed in this session, skip straight to the dashboard.
+  if (sessionStorage.getItem('sudarshan_auth') === '1') {
+    window.location.replace('sudarshan.html');
+    return;
+  }
+
+  const DEMO_EMAIL = 'demo@sudarshan.dev';
+  const DEMO_PASSWORD = 'sudarshan';
+
+  const form = document.getElementById('signinForm');
+  const emailInput = document.getElementById('email');
+  const passwordInput = document.getElementById('password');
+  const errorMsg = document.getElementById('errorMsg');
+  const signinBtn = document.getElementById('signinBtn');
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    errorMsg.classList.remove('show');
+    emailInput.classList.remove('invalid');
+    passwordInput.classList.remove('invalid');
+
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+
+    signinBtn.disabled = true;
+    signinBtn.textContent = 'Signing in…';
+
+    // Mocked latency + check — swap for a real fetch() to your auth API later.
+    setTimeout(function () {
+      if (email === DEMO_EMAIL && password === DEMO_PASSWORD) {
+        const remember = document.getElementById('remember').checked;
+        sessionStorage.setItem('sudarshan_auth', '1');
+        sessionStorage.setItem('sudarshan_user', email);
+        if (remember) {
+          localStorage.setItem('sudarshan_remember', email);
+        }
+        window.location.href = 'sudarshan.html';
+      } else {
+        errorMsg.classList.add('show');
+        emailInput.classList.add('invalid');
+        passwordInput.classList.add('invalid');
+        signinBtn.disabled = false;
+        signinBtn.textContent = 'Sign in';
+      }
+    }, 450);
+  });
+
+  // Pre-fill a remembered email, if any.
+  const remembered = localStorage.getItem('sudarshan_remember');
+  if (remembered) emailInput.value = remembered;
+});
+</script>
+
+</body>
+</html>
