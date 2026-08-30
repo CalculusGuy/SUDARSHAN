@@ -1,11 +1,19 @@
-# app.py
+# app.py — Vuln Test App with discoverable endpoints
 from flask import Flask, request
 
 app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return "Welcome to Vuln Test App"
+    return """
+    <h1>Vuln Test App</h1>
+    <p>Click the links below to test SUDARSHAN:</p>
+    <ul>
+        <li><a href="/search?q=test">Search (XSS)</a></li>
+        <li><a href="/login?username=admin">Login (SQLi)</a></li>
+        <li><a href="/ping?host=127.0.0.1">Ping (Command Injection)</a></li>
+    </ul>
+    """
 
 @app.route('/search')
 def search():
