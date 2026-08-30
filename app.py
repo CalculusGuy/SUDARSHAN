@@ -1,41 +1,62 @@
-# app.py — Vuln Test App with discoverable endpoints
-from flask import Flask, request
+# app.py — FastAPI wrapper for SUDARSHAN
+from fastapi import FastAPI, HTTPException
+from fastapi.responses import HTMLResponse, JSONResponse
+from pydantic import BaseModel
+import subprocess
+import os
+import sys
+from typing import Optional
 
-app = Flask(__name__)
+app = FastAPI(
+    title="SUDARSHAN API",
+    description="Enterprise DAST Engine — 22 vulnerability rules",
+    version="3.0.0"
+)
 
-@app.route('/')
-def home():
-    return """
-    <h1>Vuln Test App</h1>
-    <p>Click the links below to test SUDARSHAN:</p>
-    <ul>
-        <li><a href="/search?q=test">Search (XSS)</a></li>
-        <li><a href="/login?username=admin">Login (SQLi)</a></li>
-        <li><a href="/ping?host=127.0.0.1">Ping (Command Injection)</a></li>
-    </ul>
-    """
+class ScanRequest(BaseModel):
+    target: str
+    threads: int = 10
+    report: str = "both"
+    max_pages: int = 10
 
-@app.route('/search')
-def search():
-    q = request.args.get('q', '')
-    # Vulnerable to XSS — reflects input without sanitization
-    return f"You searched for: {q}"
+@app.get("/", response_class=HTMLResponse)
+def root():
+    """Serve the HTML interface"""
+    html_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "index.html")
+    if os.path.exists(html_file):
+        with open(html_file, "r") as f:
+            return f.read()
+    return {"message": "SUDARSHAN API is running", "status": "online"}
 
-@app.route('/login')
-def login():
-    username = request.args.get('username', '')
-    # Vulnerable to SQLi — returns SQL error for injection patterns
-    if "admin'" in username or "--" in username or "OR" in username.upper():
-        return "SQL syntax error: near ''admin' --' at line 1"
-    return "Login failed"
+@app.post("/scan")
+def scan(request: ScanRequest):
+    try:
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        main_path = os.path.join(script_dir, "main.py")
+        
+        result = subprocess.run(
+            [sys.executable, main_path,
+             "--target", request.target,
+             "--threads", str(request.threads),
+             "--report", request.report,
+             "--max-pages", str(request.max_pages)],
+            capture_output=True,
+            text=True,
+            timeout=300,
+            cwd=script_dir
+        )
+        
+        return {
+            "target": request.target,
+            "output": result.stdout,
+            "error": result.stderr if result.stderr else None,
+            "status": "completed" if result.returncode == 0 else "failed"
+        }
+    except subprocess.TimeoutExpired:
+        raise HTTPException(status_code=408, detail="Scan timed out after 300 seconds")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
-@app.route('/ping')
-def ping():
-    host = request.args.get('host', '')
-    # Vulnerable to command injection — simulates command execution
-    if ";" in host or "|" in host or "&&" in host:
-        return "Command executed: " + host
-    return "Ping to: " + host
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+@app.get("/health")
+def health():
+    return {"status": "healthy", "version": "3.0.0", "service": "SUDARSHAN"}
