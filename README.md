@@ -1,20 +1,7 @@
-***********************************************************************
-*                                                                     *
-*   *****  **   **  *****    *****   ****    *****   **   **  *****  *
-*  **      **   **  **  **  **   **  **  **  **      ***  **  **     *
-*   ****   **   **  *****   *******  ****    ****    ** * **  *****  *
-*      **  **   **  **  **  **   **  ** **   **      **  ***     **  *
-*  *****    *****   **  **  **   **  **  **  *****   **   **  *****  *
-*                                                                     *
-*              ENTERPRISE DYNAMIC APPLICATION                         *
-*                   SECURITY TESTING ENGINE                           *
-*                                                                     *
-***********************************************************************
-
-
-# ⚔️ SUDARSHAN
+# ⚔️ SUDARSHAN ⚔️
 
 ### Enterprise-Grade Dynamic Application Security Testing Engine
+### Author: Nilanjan Chowdhury (@CalculusGuy) 
 
 **SUDARSHAN** is a Python-based **Dynamic Application Security Testing (DAST)** engine designed to automate security assessment of modern web applications.
 
