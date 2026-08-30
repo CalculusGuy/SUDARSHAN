@@ -1,230 +1,198 @@
-# SUDARSHAN
+███████╗██╗   ██╗██████╗  █████╗ ██████╗ ███████╗██╗  ██╗ █████╗ ███╗   ██╗
+██╔════╝██║   ██║██╔══██╗██╔══██╗██╔══██╗██╔════╝██║  ██║██╔══██╗████╗  ██║
+███████╗██║   ██║██║  ██║███████║██████╔╝███████╗███████║███████║██╔██╗ ██║
+╚════██║██║   ██║██║  ██║██╔══██║██╔══██╗╚════██║██╔══██║██╔══██║██║╚██╗██║
+███████║╚██████╔╝██████╔╝██║  ██║██║  ██║███████║██║  ██║██║  ██║██║ ╚████║
+╚══════╝ ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝
 
-### Enterprise-Oriented Dynamic Application Security Testing Engine
 
-### Author : Nilanjan Chowdhury (CalculusGuy)
+# ⚔️ SUDARSHAN
 
-**SUDARSHAN** is a modular **DAST engine written from scratch in Python** for automated discovery and security testing of modern web applications.
+### Enterprise-Grade Dynamic Application Security Testing Engine
 
-It combines crawling, concurrent security testing, custom vulnerability rules, structured reporting, logging, automated testing, and CI/CD integration into a single security-testing workflow.
+**SUDARSHAN** is a Python-based **Dynamic Application Security Testing (DAST)** engine designed to automate security assessment of modern web applications.
 
-> **SUDARSHAN — Cuts through web vulnerabilities. 🔥**
+It performs automated vulnerability discovery across **22 security classes**, supports concurrent scanning, generates structured **JSON and HTML reports**, provides centralized logging, and is designed with **CI/CD integration** in mind.
+
+> **Scan. Detect. Validate. Report. Secure.**
 
 ---
 
-## 🚀 Why SUDARSHAN?
+## 🚀 Highlights
 
-Modern web applications expose hundreds of endpoints, parameters, forms, APIs, and authentication flows.
+* 🔍 **22 vulnerability detection rules**
+* ⚡ **Concurrent scanning** with `ThreadPoolExecutor`
+* 📊 **JSON + HTML security reports**
+* 📝 **File + console logging**
+* 🧪 **Automated unit testing with pytest**
+* 🔄 **GitHub Actions CI/CD**
+* 🧩 Modular rule-based architecture
+* 🛠️ CLI-driven scanning
+* 📁 Structured security findings
+* 🎯 Designed for integration into security testing pipelines
 
-Manually testing every attack surface is slow.
+---
 
-SUDARSHAN automates that process:
+## 🛡️ Vulnerability Coverage
+
+|  # | Vulnerability                           |   Severity  |
+| -: | --------------------------------------- | :---------: |
+| 01 | SQL Injection                           | 🔴 Critical |
+| 02 | Cross-Site Scripting (XSS)              |   🟠 High   |
+| 03 | Server-Side Request Forgery (SSRF)      |   🟠 High   |
+| 04 | Path Traversal                          |   🟠 High   |
+| 05 | Command Injection                       | 🔴 Critical |
+| 06 | XML External Entity (XXE)               | 🔴 Critical |
+| 07 | Cross-Site Request Forgery (CSRF)       |   🟠 High   |
+| 08 | JWT Weakness                            |   🟠 High   |
+| 09 | Open Redirect                           |  🟡 Medium  |
+| 10 | Insecure Direct Object Reference (IDOR) |   🟠 High   |
+| 11 | LDAP Injection                          | 🔴 Critical |
+| 12 | XPath Injection                         |   🟠 High   |
+| 13 | Host Header Injection                   |  🟡 Medium  |
+| 14 | NoSQL Injection                         | 🔴 Critical |
+| 15 | Unrestricted File Upload                |   🟠 High   |
+| 16 | Server-Side Template Injection (SSTI)   | 🔴 Critical |
+| 17 | HTTP Request Smuggling                  |   🟠 High   |
+| 18 | CORS Misconfiguration                   |  🟡 Medium  |
+| 19 | Race Condition                          |   🟠 High   |
+| 20 | GraphQL Injection                       | 🔴 Critical |
+| 21 | Log4Shell — CVE-2021-44228              | 🔴 Critical |
+| 22 | Sensitive Data Exposure                 |  🟡 Medium  |
+
+---
+
+## 🏗️ Architecture
 
 ```text
-                    ┌──────────────────┐
-                    │   Target Web App │
-                    └────────┬─────────┘
-                             │
-                             ▼
-                    ┌──────────────────┐
-                    │     Crawler      │
-                    │                  │
-                    │ URLs • Forms     │
-                    │ Parameters       │
-                    └────────┬─────────┘
-                             │
-                             ▼
-                    ┌──────────────────┐
-                    │   DAST Engine    │
-                    │                  │
-                    │ Concurrent Tests │
-                    │ Payloads         │
-                    │ Detection Rules  │
-                    └────────┬─────────┘
-                             │
-                             ▼
-                    ┌──────────────────┐
-                    │ Vulnerability    │
-                    │ Detection        │
-                    └────────┬─────────┘
-                             │
-                    ┌────────┴─────────┐
-                    ▼                  ▼
-             ┌─────────────┐    ┌─────────────┐
-             │ JSON Report │    │ HTML Report │
-             └─────────────┘    └─────────────┘
+                         ┌─────────────────────┐
+                         │      SUDARSHAN      │
+                         │     DAST Engine     │
+                         └──────────┬──────────┘
+                                    │
+                                    ▼
+                         ┌─────────────────────┐
+                         │    Target Input     │
+                         │   URL / Parameters   │
+                         └──────────┬──────────┘
+                                    │
+                                    ▼
+                         ┌─────────────────────┐
+                         │  Recon & Discovery  │
+                         │ Endpoints / Inputs  │
+                         └──────────┬──────────┘
+                                    │
+                                    ▼
+                 ┌──────────────────────────────────┐
+                 │       Vulnerability Engine       │
+                 │                                  │
+                 │ SQLi │ XSS │ SSRF │ XXE │ IDOR  │
+                 │ SSTI │ JWT │ CSRF │ CORS │ ...  │
+                 └────────────────┬─────────────────┘
+                                  │
+                                  ▼
+                         ┌─────────────────────┐
+                         │  Finding Validation │
+                         │ Severity / Evidence │
+                         └──────────┬──────────┘
+                                    │
+                         ┌──────────┴──────────┐
+                         ▼                     ▼
+                ┌────────────────┐    ┌────────────────┐
+                │  JSON Report   │    │  HTML Report   │
+                └────────────────┘    └────────────────┘
 ```
 
 ---
 
-# ✨ Features
+## ⚡ Quick Start
 
-| Capability             | Status | Description                                            |
-| ---------------------- | :----: | ------------------------------------------------------ |
-| Modular Architecture   |    ✅   | Crawler, scanning engine, rules and reporting          |
-| CLI Interface          |    ✅   | Configurable target, threads, reports and crawl limits |
-| Concurrent Scanning    |    ✅   | `ThreadPoolExecutor` based parallel testing            |
-| Custom Detection Rules |    ✅   | 15 vulnerability classes                               |
-| JSON Reporting         |    ✅   | Machine-readable security findings                     |
-| HTML Reporting         |    ✅   | Human-readable vulnerability reports                   |
-| Structured Logging     |    ✅   | Console and file logging                               |
-| Unit Testing           |    ✅   | `pytest` test suite                                    |
-| Code Coverage          |    ✅   | ~85% current coverage                                  |
-| GitHub Actions         |    ✅   | Automated CI pipeline                                  |
-| Docker                 |   🚧   | Planned                                                |
-| Authentication         |   🚧   | Planned                                                |
-| Proxy Integration      |   🚧   | Planned                                                |
-
----
-
-# 🔍 Detection Capabilities
-
-SUDARSHAN currently implements **15 security rules** across multiple vulnerability classes.
-
-|  # | Vulnerability               |   Severity  |
-| -: | --------------------------- | :---------: |
-| 01 | SQL Injection               | 🔴 Critical |
-| 02 | Cross-Site Scripting        |   🟠 High   |
-| 03 | Server-Side Request Forgery |   🟠 High   |
-| 04 | Path Traversal              |   🟠 High   |
-| 05 | Command Injection           | 🔴 Critical |
-| 06 | XML External Entity (XXE)   | 🔴 Critical |
-| 07 | Cross-Site Request Forgery  |   🟠 High   |
-| 08 | JWT Weaknesses              |   🟠 High   |
-| 09 | Open Redirect               |  🟡 Medium  |
-| 10 | HTTP Request Smuggling      |   🟠 High   |
-| 11 | IDOR                        |   🟠 High   |
-| 12 | LDAP Injection              | 🔴 Critical |
-| 13 | XPath Injection             |   🟠 High   |
-| 14 | Host Header Injection       |  🟡 Medium  |
-| 15 | NoSQL Injection             | 🔴 Critical |
-
-The rule architecture is designed so additional vulnerability classes can be introduced without rewriting the core crawler or reporting pipeline.
-
----
-
-# 📊 Benchmark Results
-
-SUDARSHAN has been tested against intentionally vulnerable and publicly available targets.
-
-### OWASP Juice Shop
-
-**24 findings identified**
-
-| Metric          |          Result |
-| --------------- | --------------: |
-| Vulnerabilities |          **24** |
-| Rules           |          **15** |
-| Crawl Depth     |       10+ pages |
-| Full Scan Time  |     ~77 seconds |
-| Test Suite      | **8/8 passing** |
-| Code Coverage   |        **~85%** |
-
-### Hack This Site
-
-**135+ findings reported during testing**
-
-> Results depend heavily on target configuration, crawl depth, accessible endpoints, network conditions, and rule behavior. Findings should always be manually validated before being treated as confirmed vulnerabilities.
-
----
-
-# 🧪 Security Testing Workflow
-
-A typical scan follows this pipeline:
-
-```text
-Target
-  │
-  ▼
-URL Discovery
-  │
-  ├── Pages
-  ├── Forms
-  └── Parameters
-  │
-  ▼
-Concurrent Security Testing
-  │
-  ├── Injection Tests
-  ├── Client-Side Tests
-  ├── Server-Side Tests
-  └── Configuration Tests
-  │
-  ▼
-Detection Engine
-  │
-  ▼
-Finding Validation
-  │
-  ▼
-Report Generation
-  │
-  ├── JSON
-  └── HTML
-```
-
----
-
-# 🏗️ Architecture
-
-```text
-SUDARSHAN/
-│
-├── crawler/
-│   └── crawler.py
-│       └── URL and form discovery
-│
-├── engine/
-│   └── engine.py
-│       └── Concurrent security testing
-│
-├── rules/
-│   └── dast_rules.json
-│       └── Vulnerability detection rules
-│
-├── reporter/
-│   └── reporter.py
-│       └── JSON + HTML reporting
-│
-├── tests/
-│   └── test_scanner.py
-│       └── Automated test suite
-│
-├── logs/
-│   └── sudarshan.log
-│       └── Runtime logs
-│
-├── .github/
-│   └── workflows/
-│       └── ci.yml
-│           └── CI pipeline
-│
-├── main.py
-│   └── CLI entry point
-│
-├── requirements.txt
-├── LICENSE
-└── README.md
-```
-
----
-
-# ⚡ Quick Start
-
-## 1. Clone
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/CalculusGuy/SUDARSHAN.git
 cd SUDARSHAN
 ```
 
-## 2. Install dependencies
+### 2. Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## 3. Run a scan
+### 3. Run a scan
+
+```bash
+python main.py --target https://example.com
+```
+
+### 4. Run with concurrent workers
+
+```bash
+python main.py --target https://example.com --threads 20
+```
+
+### 5. Generate both reports
+
+```bash
+python main.py --target https://example.com --threads 20 --report both
+```
+
+---
+
+## 📊 Reporting
+
+SUDARSHAN supports multiple report formats.
+
+### JSON
+
+Designed for:
+
+* CI/CD pipelines
+* Automated processing
+* Security dashboards
+* Programmatic analysis
+* Integration with other security tools
+
+Example structure:
+
+```json
+{
+  "target": "https://example.com",
+  "findings": [
+    {
+      "vulnerability": "Cross-Site Scripting",
+      "severity": "High",
+      "endpoint": "/search",
+      "parameter": "q"
+    }
+  ]
+}
+```
+
+### HTML
+
+The HTML report provides a human-readable security assessment containing:
+
+* Target information
+* Vulnerability findings
+* Severity classification
+* Affected endpoints
+* Parameters
+* Security evidence
+* Scan information
+
+---
+
+## ⚙️ Configuration
+
+| Option      | Description                              |
+| ----------- | ---------------------------------------- |
+| `--target`  | Target web application                   |
+| `--threads` | Number of concurrent workers             |
+| `--report`  | Report format: `json`, `html`, or `both` |
+
+Example:
 
 ```bash
 python main.py \
@@ -233,231 +201,234 @@ python main.py \
     --report both
 ```
 
-### Available options
-
-```text
---target       Target URL
---threads      Number of concurrent workers
---report       json | html | both
---max-pages    Maximum number of pages to crawl
-```
-
-Example:
-
-```bash
-python main.py \
-    --target http://localhost:3000 \
-    --threads 20 \
-    --max-pages 100 \
-    --report both
-```
-
 ---
 
-# 📄 Reporting
+## 🧪 Testing
 
-SUDARSHAN generates both machine-readable and human-readable reports.
-
-### JSON
-
-Designed for:
-
-* CI/CD pipelines
-* Automation
-* Security dashboards
-* Programmatic processing
-
-### HTML
-
-Designed for:
-
-* Security assessments
-* Developer review
-* Vulnerability triage
-* Evidence presentation
-
-A finding can contain information such as:
-
-```text
-Vulnerability
-Severity
-Target
-Endpoint
-Parameter
-Evidence
-Detection Rule
-Remediation
-```
-
----
-
-# 🔄 CI/CD Integration
-
-SUDARSHAN includes a **GitHub Actions pipeline** for automated testing.
-
-```text
-Developer
-    │
-    ▼
-git push
-    │
-    ▼
-GitHub Actions
-    │
-    ├── Install dependencies
-    ├── Run pytest
-    └── Validate project
-```
-
-The planned CI/CD evolution is:
-
-```text
-Application Build
-       │
-       ▼
-   Deploy Test App
-       │
-       ▼
-   SUDARSHAN DAST
-       │
-       ▼
- Findings Generated
-       │
-       ▼
- Severity Evaluation
-       │
-       ├── PASS
-       └── FAIL
-```
-
----
-
-# 🧪 Testing
-
-SUDARSHAN uses `pytest` for automated testing.
-
-Current status:
-
-```text
-Tests:       8/8 passing
-Coverage:    ~85%
-Framework:   pytest
-```
-
-Run the test suite:
+Run the complete test suite with:
 
 ```bash
 pytest
 ```
 
-Run with coverage:
+Run with verbose output:
 
 ```bash
-pytest --cov=.
+pytest -v
+```
+
+SUDARSHAN uses automated tests to help maintain reliability as new detection rules and scanning capabilities are introduced.
+
+---
+
+## 🔄 CI/CD
+
+SUDARSHAN includes **GitHub Actions** support for automated testing.
+
+The CI pipeline can be used to:
+
+```text
+Push / Pull Request
+        │
+        ▼
+ Install Dependencies
+        │
+        ▼
+    Run Tests
+        │
+        ▼
+   Validate Build
+        │
+        ▼
+      PASS ✓
+```
+
+This makes the project suitable for integration into security-focused development workflows.
+
+---
+
+## 📁 Project Structure
+
+```text
+SUDARSHAN/
+│
+├── main.py
+├── requirements.txt
+├── pytest.ini
+│
+├── scanner/
+│   ├── crawler.py
+│   ├── engine.py
+│   └── ...
+│
+├── rules/
+│   ├── sqli.py
+│   ├── xss.py
+│   ├── ssrf.py
+│   ├── command_injection.py
+│   └── ...
+│
+├── reports/
+│   ├── json_report.py
+│   └── html_report.py
+│
+├── tests/
+│   └── ...
+│
+├── logs/
+│   └── ...
+│
+└── .github/
+    └── workflows/
+        └── ci.yml
+```
+
+> The exact directory structure may vary depending on the current implementation.
+
+---
+
+## 🔬 Security Testing Workflow
+
+SUDARSHAN follows a structured DAST workflow:
+
+```text
+       TARGET
+          │
+          ▼
+   ┌─────────────┐
+   │   Discovery │
+   └──────┬──────┘
+          │
+          ▼
+   ┌─────────────┐
+   │ Input / API │
+   │ Enumeration │
+   └──────┬──────┘
+          │
+          ▼
+   ┌─────────────┐
+   │ 22 Security │
+   │    Rules    │
+   └──────┬──────┘
+          │
+          ▼
+   ┌─────────────┐
+   │  Validation │
+   └──────┬──────┘
+          │
+          ▼
+   ┌─────────────┐
+   │   Findings  │
+   └──────┬──────┘
+          │
+          ▼
+   ┌─────────────┐
+   │   Reports   │
+   └─────────────┘
 ```
 
 ---
 
-# 🛠️ Technology Stack
+## 📈 Roadmap
 
-| Component    | Technology           |
-| ------------ | -------------------- |
-| Language     | Python 3.8+          |
-| HTTP Client  | Requests             |
-| HTML Parsing | BeautifulSoup4, lxml |
-| Concurrency  | ThreadPoolExecutor   |
-| CLI          | argparse             |
-| Reporting    | JSON, HTML           |
-| Testing      | pytest, pytest-cov   |
-| CI/CD        | GitHub Actions       |
-| Logging      | Python `logging`     |
+### Current
 
----
-
-# 🗺️ Roadmap
-
-## v3.x — Reliability & Deployment
-
-* [x] Modular architecture
+* [x] 22 vulnerability rules
 * [x] Concurrent scanning
-* [x] 15 detection rules
 * [x] JSON reporting
 * [x] HTML reporting
-* [x] Logging
-* [x] Unit tests
-* [x] GitHub Actions
-* [ ] Docker containerization
+* [x] Centralized logging
+* [x] Pytest test suite
+* [x] GitHub Actions CI/CD
 
-## v4.x — Authenticated DAST
+### Planned
 
-* [ ] Cookie-based authentication
-* [ ] Bearer token support
-* [ ] Login workflow support
-* [ ] Session management
-* [ ] Authenticated crawling
-
-## v5.x — Proxy & Advanced Testing
-
-* [ ] HTTP proxy support
-* [ ] Burp Suite integration
-* [ ] Request/response replay
-* [ ] Passive traffic analysis
-* [ ] Expanded API testing
-
-## Future
-
-* [ ] 20+ vulnerability rules
-* [ ] API/OpenAPI scanning
-* [ ] Authentication-aware crawling
+* [ ] Dockerized deployment
+* [ ] Live web dashboard
+* [ ] Authentication/session-aware scanning
+* [ ] API security testing
+* [ ] Advanced endpoint discovery
 * [ ] Finding deduplication
-* [ ] Risk scoring
-* [ ] SARIF output
-* [ ] Security dashboard
-* [ ] Distributed scanning
+* [ ] CVSS-based risk scoring
+* [ ] Evidence collection and replay
+* [ ] Scan history
+* [ ] Scheduled scanning
+* [ ] SARIF report generation
+* [ ] Improved CI/CD integrations
 
 ---
 
-# ⚠️ Responsible Use
+## 🧰 Technology Stack
+
+| Component   | Technology           |
+| ----------- | -------------------- |
+| Language    | Python               |
+| Concurrency | `ThreadPoolExecutor` |
+| Testing     | pytest               |
+| CI/CD       | GitHub Actions       |
+| Reporting   | JSON / HTML          |
+| Interface   | CLI                  |
+| License     | MIT                  |
+
+---
+
+## 🎯 Use Cases
+
+SUDARSHAN can be used for:
+
+* Web application security assessments
+* Vulnerability research
+* Security engineering projects
+* DevSecOps pipelines
+* CI/CD security testing
+* Security labs and controlled environments
+* Automated regression security testing
+
+---
+
+## ⚠️ Responsible Use
 
 SUDARSHAN is intended for **authorized security testing only**.
 
-Use it against:
+Only scan applications, APIs, systems, and infrastructure that you own or have explicit permission to assess.
 
-* Applications you own
-* Applications you have explicit permission to test
-* Intentionally vulnerable environments
-* Security labs and CTF platforms where testing is permitted
-
-Do not scan systems without authorization.
-
-The presence of a reported finding does not automatically mean a vulnerability is confirmed. Security findings should be manually validated.
+The author is not responsible for misuse, unauthorized scanning, disruption, data loss, or damage resulting from the use of this tool.
 
 ---
 
-# 📜 License
+## 👨‍💻 Author
 
-Released under the **MIT License**.
+### Nilanjan Chowdhury
 
----
+Cybersecurity Researcher & Builder
+Kolkata, India
 
-# 👨‍💻 Author
+**Focus Areas**
 
-**Nilanjan Chowdhury**
-
-Cybersecurity student focused on:
-
-* Application Security
-* Penetration Testing
-* AI Security
-* Security Automation
-* DAST
+`Application Security` · `DAST` · `Web Security` · `AI Security` · `Red Teaming`
 
 ---
 
-# 🔥 SUDARSHAN
+## 🔗 Links
 
-> **Automate the hunt. Validate the finding. Secure the application.**
+* **GitHub:** [github.com/CalculusGuy/SUDARSHAN](https://github.com/CalculusGuy/SUDARSHAN)
 
-**15 Rules • Concurrent Scanning • Automated Reporting • CI/CD Ready**
+---
 
-⭐ If you find the project useful, consider starring the repository.
+## 📜 License
+
+This project is licensed under the **MIT License**.
+
+See `LICENSE` for details.
+
+---
+
+<div align="center">
+
+### ⚔️ SUDARSHAN
+
+**Automated Web Security. Engineered for Scale.**
+
+⭐ Star the repository if you find it useful.
+
+</div>
