@@ -1,68 +1,147 @@
 # engine/engine.py
 import requests
-# engine/engine.py
-from urllib.parse import urljoin  # <--- ADD THIS LINE
+import urllib3
+from urllib.parse import urljoin, urlparse
 
-def test_url(target_url, rules):
+# Disable SSL warnings globally
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+def test_url(url, rules, timeout=5):
+    """
+    Test a single URL against all rules.
+    """
     findings = []
+    
     for rule in rules:
-        for vector in rule["attack_vectors"]:
-            method = vector.get("method", "GET")
-            param = vector.get("parameter", "id")
+        for vector in rule.get("attack_vectors", []):
+            if vector.get("method", "GET").upper() != "GET":
+                continue
+            
+            parameter = vector.get("parameter", "id")
             for payload in vector.get("payloads", []):
-                if "?" in target_url:
-                    attack_url = target_url + f"&{param}={payload}"
-                else:
-                    attack_url = target_url + f"?{param}={payload}"
                 try:
-                    if method.upper() == "GET":
-                        response = requests.get(attack_url, timeout=5)
-                    else:
-                        response = requests.get(attack_url, timeout=5, verify=False)
-                    for indicator in rule["detection"].get("response_indicators", []):
+                    # Build attack URL with payload
+                    attack_url = inject_payload(url, parameter, payload)
+                    
+                    # Send request with SSL verification disabled
+                    response = requests.get(attack_url, timeout=timeout, verify=False)
+                    
+                    # Check for indicators
+                    indicators = rule.get("detection", {}).get("response_indicators", [])
+                    for indicator in indicators:
                         if indicator.lower() in response.text.lower():
                             findings.append({
-                                "rule": rule["name"],
+                                "rule": rule.get("name", "Unknown"),
+                                "rule_id": rule.get("rule_id", "N/A"),
                                 "severity": rule.get("severity", "Medium"),
+                                "cwe": rule.get("cwe", "N/A"),
                                 "payload": payload,
+                                "parameter": parameter,
                                 "url": attack_url,
-                                "indicator": indicator
+                                "indicator": indicator,
+                                "confirmed": True,
+                                "timestamp": str(requests.get(url, timeout=timeout, verify=False).elapsed.total_seconds())
                             })
-                            print(f"  [!] {rule['name']} found! Payload: {payload}")
-                except Exception as e:
-                    print(f"  [x] Error: {e}")
+                            break
+                            
+                except requests.exceptions.SSLError:
+                    # Skip SSL errors silently
+                    continue
+                except requests.exceptions.Timeout:
+                    continue
+                except Exception:
+                    continue
+    
     return findings
 
-def test_form(form, rules, base_url):
+
+def test_form(form, rules, target_url, timeout=5):
+    """
+    Test a form against all rules.
+    """
     findings = []
-    form_action = form["action"]
-    form_method = form["method"]
-
-    if form_action.startswith("/"):
-        form_action = urljoin(base_url, form_action)
-
-    if not form_action.startswith("http"):
-        return findings
-
+    
+    action = form.get("action", target_url)
+    method = form.get("method", "get").upper()
+    inputs = form.get("inputs", [])
+    
     for rule in rules:
-        for vector in rule["attack_vectors"]:
+        for vector in rule.get("attack_vectors", []):
+            vector_method = vector.get("method", "GET").upper()
+            if vector_method != method:
+                continue
+            
+            parameter = vector.get("parameter", "")
+            if not parameter:
+                continue
+            
+            # Check if the parameter exists in the form
+            param_exists = any(inp.get("name") == parameter for inp in inputs)
+            if not param_exists:
+                continue
+            
             for payload in vector.get("payloads", []):
-                form_data = {input_name: payload for input_name in form["inputs"]}
                 try:
-                    if form_method == "GET":
-                        response = requests.get(form_action, params=form_data, timeout=5)
+                    # Build form data with payload
+                    data = {}
+                    for inp in inputs:
+                        if inp.get("name") == parameter:
+                            data[inp.get("name")] = payload
+                        else:
+                            data[inp.get("name")] = "test123"
+                    
+                    # Send request with SSL verification disabled
+                    if method == "POST":
+                        response = requests.post(action, data=data, timeout=timeout, verify=False)
                     else:
-                        response = requests.post(form_action, data=form_data, timeout=5)
-                    for indicator in rule["detection"].get("response_indicators", []):
+                        response = requests.get(action, params=data, timeout=timeout, verify=False)
+                    
+                    # Check for indicators
+                    indicators = rule.get("detection", {}).get("response_indicators", [])
+                    for indicator in indicators:
                         if indicator.lower() in response.text.lower():
                             findings.append({
-                                "rule": rule["name"],
+                                "rule": rule.get("name", "Unknown"),
+                                "rule_id": rule.get("rule_id", "N/A"),
                                 "severity": rule.get("severity", "Medium"),
+                                "cwe": rule.get("cwe", "N/A"),
                                 "payload": payload,
-                                "url": form_action,
-                                "indicator": indicator
+                                "parameter": parameter,
+                                "url": action,
+                                "indicator": indicator,
+                                "confirmed": True,
+                                "timestamp": str(response.elapsed.total_seconds())
                             })
-                            print(f"  [!] {rule['name']} found in form! Payload: {payload}")
-                except Exception as e:
-                    print(f"  [x] Error testing form: {e}")
+                            break
+                            
+                except requests.exceptions.SSLError:
+                    continue
+                except requests.exceptions.Timeout:
+                    continue
+                except Exception:
+                    continue
+    
     return findings
+
+
+def inject_payload(url, parameter, payload):
+    """
+    Inject a payload into a URL parameter.
+    """
+    parsed = urlparse(url)
+    query = parsed.query
+    
+    if query:
+        # Replace or add the parameter
+        params = {}
+        for param in query.split('&'):
+            if '=' in param:
+                key, value = param.split('=', 1)
+                params[key] = value
+        params[parameter] = payload
+        
+        # Rebuild query string
+        new_query = '&'.join([f"{k}={v}" for k, v in params.items()])
+        return urljoin(url, f"{parsed.path}?{new_query}")
+    else:
+        return urljoin(url, f"{parsed.path}?{parameter}={payload}")
