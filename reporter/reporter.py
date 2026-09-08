@@ -1,33 +1,143 @@
 # reporter/reporter.py
 import json
+import os
 from datetime import datetime
 
-def generate_json_report(findings, target_url):
+def generate_json_report(findings, target_url, out_dir="reports"):
+    """Generate JSON report in the specified output directory."""
+    os.makedirs(out_dir, exist_ok=True)
+    
     report = {
         "target": target_url,
         "scan_date": datetime.now().isoformat(),
         "total_findings": len(findings),
         "findings": findings
     }
-    with open("scan_report.json", "w") as f:
-        json.dump(report, f, indent=2)
-    print("\n[+] JSON report saved to scan_report.json")
+    
+    report_path = os.path.join(out_dir, "scan_report.json")
+    with open(report_path, "w", encoding='utf-8') as f:
+        json.dump(report, f, indent=2, ensure_ascii=False)
+    print(f"\n[+] JSON report saved to {report_path}")
+    
+    return report_path
 
-def generate_html_report(findings, target_url):
-    html = f"""
-    <html>
-    <head><title>DAST Scan Report</title></head>
-    <body>
-    <h1>DAST Scan Report</h1>
-    <p><strong>Target:</strong> {target_url}</p>
-    <p><strong>Scan Date:</strong> {datetime.now().isoformat()}</p>
-    <p><strong>Total Findings:</strong> {len(findings)}</p>
-    <ul>
-    """
+def generate_html_report(findings, target_url, out_dir="reports"):
+    """Generate HTML report in the specified output directory."""
+    os.makedirs(out_dir, exist_ok=True)
+    
+    def safe_str(value):
+        if value is None:
+            return "N/A"
+        return str(value).replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+    
+    # Group findings by severity for summary
+    severity_counts = {}
     for finding in findings:
-        html += f"<li><strong>{finding['rule']}</strong> - {finding['severity']} - {finding['payload']}</li>"
-    html += "</ul></body></html>"
-
-    with open("scan_report.html", "w") as f:
+        if not isinstance(finding, dict):
+            continue
+        severity = finding.get("severity", "Unknown")
+        severity_counts[severity] = severity_counts.get(severity, 0) + 1
+    
+    html = f"""<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>SUDARSHAN — DAST Scan Report</title>
+    <style>
+        body {{
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0d0d14;
+            color: #f0f0f8;
+            padding: 40px;
+        }}
+        h1 {{ color: #00ff9d; }}
+        .summary {{ background: #1a1a26; padding: 20px; border-radius: 8px; margin-bottom: 20px; }}
+        .summary-item {{ display: inline-block; margin-right: 30px; }}
+        .summary-item .num {{ font-size: 24px; font-weight: bold; color: #7b61ff; }}
+        .summary-item .label {{ color: #6060a0; }}
+        .finding {{
+            background: #1a1a26;
+            border: 1px solid #222232;
+            padding: 16px;
+            margin: 12px 0;
+            border-radius: 4px;
+        }}
+        .finding strong {{ color: #7b61ff; }}
+        .severity-critical {{ color: #ff6b6b; }}
+        .severity-high {{ color: #ffb86b; }}
+        .severity-medium {{ color: #f1fa8c; }}
+        .severity-low {{ color: #00ff9d; }}
+        code {{ background: #0d0d14; padding: 2px 6px; border-radius: 3px; }}
+        .footer {{ color: #6060a0; font-size: 12px; margin-top: 40px; text-align: center; }}
+    </style>
+</head>
+<body>
+    <h1>🛡️ SUDARSHAN — DAST Scan Report</h1>
+    <p><strong>Target:</strong> {safe_str(target_url)}</p>
+    <p><strong>Scan Date:</strong> {datetime.now().isoformat()}</p>
+    
+    <div class="summary">
+        <h3>Summary</h3>
+        <div class="summary-item">
+            <div class="num">{len(findings)}</div>
+            <div class="label">Total Findings</div>
+        </div>
+"""
+    
+    for severity, count in severity_counts.items():
+        severity_class = severity.lower()
+        html += f"""
+        <div class="summary-item">
+            <div class="num" style="color: {severity_class};">{count}</div>
+            <div class="label">{severity}</div>
+        </div>
+"""
+    
+    html += """
+    </div>
+    <hr>
+    <h2>Detailed Findings</h2>
+"""
+    
+    for finding in findings:
+        if not isinstance(finding, dict):
+            continue
+            
+        rule = safe_str(finding.get("rule", "Unknown"))
+        severity = safe_str(finding.get("severity", "Unknown"))
+        severity_class = severity.lower()
+        payload = safe_str(finding.get("payload", "N/A"))
+        url = safe_str(finding.get("url", "N/A"))
+        indicator = safe_str(finding.get("indicator", "N/A"))
+        parameter = safe_str(finding.get("parameter", "N/A"))
+        rule_id = safe_str(finding.get("rule_id", "N/A"))
+        
+        html += f"""
+        <div class="finding">
+            <strong>[{rule_id}] {rule}</strong>
+            <span class="severity-{severity_class}">[{severity}]</span>
+            <br>
+            <strong>Parameter:</strong> <code>{parameter}</code>
+            <br>
+            <strong>Payload:</strong> <code>{payload}</code>
+            <br>
+            <strong>URL:</strong> {url}
+            <br>
+            <strong>Indicator:</strong> {indicator}
+        </div>
+"""
+    
+    html += f"""
+    <div class="footer">
+        Generated by SUDARSHAN — Cuts through web vulnerabilities.
+    </div>
+</body>
+</html>
+"""
+    
+    report_path = os.path.join(out_dir, "scan_report.html")
+    with open(report_path, "w", encoding='utf-8') as f:
         f.write(html)
-    print("[+] HTML report saved to scan_report.html")
+    print(f"[+] HTML report saved to {report_path}")
+    
+    return report_path
