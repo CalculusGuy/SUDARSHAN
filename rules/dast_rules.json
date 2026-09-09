@@ -1,8 +1,8 @@
 {
   "name": "DAST Rule Set",
-  "version": "3.0",
+  "version": "3.1",
   "author": "Nilanjan Chowdhury",
-  "description": "Enterprise DAST rules for web application security testing — 22 vulnerability detection modules with PoC generation",
+  "description": "Enterprise DAST rules for web application security testing \u2014 22 vulnerability detection modules with PoC generation and differential/baseline confirmation logic to reduce false positives (v3.1 adds a 'validation' block per rule; see changelog).",
   "rules": [
     {
       "rule_id": "DAST-001",
@@ -46,6 +46,21 @@
           "PostgreSQL",
           "SQLite"
         ]
+      },
+      "validation": {
+        "confirmation_mode": "differential",
+        "require_baseline_request": true,
+        "require_control_request": true,
+        "control_payload_template": "ZZZCTRL_DAST-001_ZZZ",
+        "confirmation_rule": "indicator_in_payload_response AND NOT indicator_in_baseline_response AND NOT indicator_in_control_response",
+        "min_confidence_to_report": "medium",
+        "notes": "Do not report as confirmed on indicator match alone. Baseline/control must be clean.",
+        "differential_check": {
+          "description": "Boolean-based differential: compare TRUE vs FALSE conditional payloads on the same parameter; only a real backend SQL evaluation produces different response length/content between them.",
+          "true_payload": "' AND '1'='1",
+          "false_payload": "' AND '1'='2",
+          "confirm_if": "response(true_payload) != response(false_payload) AND both differ from control"
+        }
       }
     },
     {
@@ -89,6 +104,19 @@
           "onload=",
           "javascript:"
         ]
+      },
+      "validation": {
+        "confirmation_mode": "differential",
+        "require_baseline_request": true,
+        "require_control_request": true,
+        "control_payload_template": "ZZZCTRL_DAST-002_ZZZ",
+        "confirmation_rule": "indicator_in_payload_response AND NOT indicator_in_baseline_response AND NOT indicator_in_control_response",
+        "min_confidence_to_report": "medium",
+        "notes": "Do not report as confirmed on indicator match alone. Baseline/control must be clean.",
+        "differential_check": {
+          "description": "Confirm the payload is reflected UNENCODED in an executable HTML/JS context, not just present as escaped text (&lt;script&gt;) or inside a non-executing context (comment, attribute-safe encoding).",
+          "confirm_if": "raw '<script>' or 'onerror=' present unescaped in response, not HTML-entity-encoded"
+        }
       }
     },
     {
@@ -131,6 +159,20 @@
           "internal",
           "metadata"
         ]
+      },
+      "validation": {
+        "confirmation_mode": "differential",
+        "require_baseline_request": true,
+        "require_control_request": true,
+        "control_payload_template": "ZZZCTRL_DAST-003_ZZZ",
+        "confirmation_rule": "indicator_in_payload_response AND NOT indicator_in_baseline_response AND NOT indicator_in_control_response",
+        "min_confidence_to_report": "medium",
+        "notes": "Do not report as confirmed on indicator match alone. Baseline/control must be clean.",
+        "differential_check": {
+          "description": "Blind/out-of-band confirmation preferred: use an OOB collaborator domain (e.g. Burp Collaborator / interactsh) and check for an inbound callback, rather than substring-matching 'metadata' or '127.0.0.1' which commonly appear in unrelated page content.",
+          "oob_payload_template": "http://{oob_domain}/ssrf-test",
+          "confirm_if": "inbound HTTP/DNS callback received at oob_domain"
+        }
       }
     },
     {
@@ -173,6 +215,19 @@
           "127.0.0.1",
           "localhost"
         ]
+      },
+      "validation": {
+        "confirmation_mode": "differential",
+        "require_baseline_request": true,
+        "require_control_request": true,
+        "control_payload_template": "ZZZCTRL_DAST-004_ZZZ",
+        "confirmation_rule": "indicator_in_payload_response AND NOT indicator_in_baseline_response AND NOT indicator_in_control_response",
+        "min_confidence_to_report": "medium",
+        "notes": "Do not report as confirmed on indicator match alone. Baseline/control must be clean.",
+        "differential_check": {
+          "description": "Require a structurally-specific marker (e.g. 'root:x:0:0:root' full passwd line format, or '[fonts]'/'[extensions]' ini section header for win.ini), not a bare substring like 'root' or 'localhost' that can appear anywhere.",
+          "confirm_if": "structured_file_signature_present"
+        }
       }
     },
     {
@@ -217,6 +272,20 @@
           "bin",
           "C:\\Windows\\System32"
         ]
+      },
+      "validation": {
+        "confirmation_mode": "differential",
+        "require_baseline_request": true,
+        "require_control_request": true,
+        "control_payload_template": "ZZZCTRL_DAST-005_ZZZ",
+        "confirmation_rule": "indicator_in_payload_response AND NOT indicator_in_baseline_response AND NOT indicator_in_control_response",
+        "min_confidence_to_report": "medium",
+        "notes": "Do not report as confirmed on indicator match alone. Baseline/control must be clean.",
+        "differential_check": {
+          "description": "Use a unique, non-dictionary echo marker instead of relying on 'root'/'bin'/'uid=' substrings, which routinely appear in unrelated content (metadata, filenames, error strings).",
+          "payload_template": "127.0.0.1; echo SSTICMDTEST_DAST-005_MARKER",
+          "confirm_if": "'SSTICMDTEST_DAST-005_MARKER' present verbatim in payload response AND absent from baseline/control"
+        }
       }
     },
     {
@@ -246,6 +315,20 @@
           "169.254.169.254",
           "java.io.FileNotFoundException"
         ]
+      },
+      "validation": {
+        "confirmation_mode": "differential",
+        "require_baseline_request": true,
+        "require_control_request": true,
+        "control_payload_template": "ZZZCTRL_DAST-006_ZZZ",
+        "confirmation_rule": "indicator_in_payload_response AND NOT indicator_in_baseline_response AND NOT indicator_in_control_response",
+        "min_confidence_to_report": "medium",
+        "notes": "Do not report as confirmed on indicator match alone. Baseline/control must be clean.",
+        "differential_check": {
+          "description": "Prefer OOB XXE (external DTD fetch to a collaborator) over in-band file content matching, which is prone to coincidental matches on generic content.",
+          "oob_payload_template": "<!DOCTYPE foo [<!ENTITY xxe SYSTEM \"http://{oob_domain}/xxe\">]>",
+          "confirm_if": "inbound callback received at oob_domain"
+        }
       }
     },
     {
@@ -279,6 +362,15 @@
         "missing_token": {
           "check": "No CSRF token found in form or request"
         }
+      },
+      "validation": {
+        "confirmation_mode": "differential",
+        "require_baseline_request": true,
+        "require_control_request": true,
+        "control_payload_template": "ZZZCTRL_DAST-007_ZZZ",
+        "confirmation_rule": "indicator_in_payload_response AND NOT indicator_in_baseline_response AND NOT indicator_in_control_response",
+        "min_confidence_to_report": "medium",
+        "notes": "Do not report as confirmed on indicator match alone. Baseline/control must be clean."
       }
     },
     {
@@ -308,6 +400,15 @@
           "invalid signature",
           "jwt"
         ]
+      },
+      "validation": {
+        "confirmation_mode": "differential",
+        "require_baseline_request": true,
+        "require_control_request": true,
+        "control_payload_template": "ZZZCTRL_DAST-008_ZZZ",
+        "confirmation_rule": "indicator_in_payload_response AND NOT indicator_in_baseline_response AND NOT indicator_in_control_response",
+        "min_confidence_to_report": "medium",
+        "notes": "Do not report as confirmed on indicator match alone. Baseline/control must be clean."
       }
     },
     {
@@ -338,6 +439,15 @@
           "Location: http://evil.com",
           "redirected to evil.com"
         ]
+      },
+      "validation": {
+        "confirmation_mode": "differential",
+        "require_baseline_request": true,
+        "require_control_request": true,
+        "control_payload_template": "ZZZCTRL_DAST-009_ZZZ",
+        "confirmation_rule": "indicator_in_payload_response AND NOT indicator_in_baseline_response AND NOT indicator_in_control_response",
+        "min_confidence_to_report": "medium",
+        "notes": "Do not report as confirmed on indicator match alone. Baseline/control must be clean."
       }
     },
     {
@@ -372,6 +482,15 @@
           "invoice",
           "document"
         ]
+      },
+      "validation": {
+        "confirmation_mode": "differential",
+        "require_baseline_request": true,
+        "require_control_request": true,
+        "control_payload_template": "ZZZCTRL_DAST-010_ZZZ",
+        "confirmation_rule": "indicator_in_payload_response AND NOT indicator_in_baseline_response AND NOT indicator_in_control_response",
+        "min_confidence_to_report": "medium",
+        "notes": "Do not report as confirmed on indicator match alone. Baseline/control must be clean."
       }
     },
     {
@@ -404,6 +523,21 @@
           "Search returned",
           "Invalid DN syntax"
         ]
+      },
+      "validation": {
+        "confirmation_mode": "differential",
+        "require_baseline_request": true,
+        "require_control_request": true,
+        "control_payload_template": "ZZZCTRL_DAST-011_ZZZ",
+        "confirmation_rule": "indicator_in_payload_response AND NOT indicator_in_baseline_response AND NOT indicator_in_control_response",
+        "min_confidence_to_report": "medium",
+        "notes": "Do not report as confirmed on indicator match alone. Baseline/control must be clean.",
+        "differential_check": {
+          "description": "The literal string 'LDAP' appearing in a response (e.g. generic error pages) is not evidence of injection. Require a TRUE/FALSE boolean differential on the LDAP filter (e.g. always-true vs always-false wildcard) with a measurable behavioral difference (result count, response length).",
+          "true_payload": "*",
+          "false_payload": "nonexistent_ldap_entry_zzz",
+          "confirm_if": "response(true_payload) != response(false_payload), both differing from control"
+        }
       }
     },
     {
@@ -435,6 +569,21 @@
           "Invalid expression",
           "xml"
         ]
+      },
+      "validation": {
+        "confirmation_mode": "differential",
+        "require_baseline_request": true,
+        "require_control_request": true,
+        "control_payload_template": "ZZZCTRL_DAST-012_ZZZ",
+        "confirmation_rule": "indicator_in_payload_response AND NOT indicator_in_baseline_response AND NOT indicator_in_control_response",
+        "min_confidence_to_report": "medium",
+        "notes": "Do not report as confirmed on indicator match alone. Baseline/control must be clean.",
+        "differential_check": {
+          "description": "'xml' appearing in a response is extremely weak (matches any XML-ish content, including unrelated metadata). Require boolean differential like SQLi: true vs false XPath conditions with a measurable response difference.",
+          "true_payload": "' or '1'='1",
+          "false_payload": "' or '1'='2",
+          "confirm_if": "response(true_payload) != response(false_payload), both differing from control"
+        }
       }
     },
     {
@@ -465,6 +614,15 @@
           "evil.com",
           "attacker.com"
         ]
+      },
+      "validation": {
+        "confirmation_mode": "differential",
+        "require_baseline_request": true,
+        "require_control_request": true,
+        "control_payload_template": "ZZZCTRL_DAST-013_ZZZ",
+        "confirmation_rule": "indicator_in_payload_response AND NOT indicator_in_baseline_response AND NOT indicator_in_control_response",
+        "min_confidence_to_report": "medium",
+        "notes": "Do not report as confirmed on indicator match alone. Baseline/control must be clean."
       }
     },
     {
@@ -497,6 +655,21 @@
           "$regex",
           "MongoError"
         ]
+      },
+      "validation": {
+        "confirmation_mode": "differential",
+        "require_baseline_request": true,
+        "require_control_request": true,
+        "control_payload_template": "ZZZCTRL_DAST-014_ZZZ",
+        "confirmation_rule": "indicator_in_payload_response AND NOT indicator_in_baseline_response AND NOT indicator_in_control_response",
+        "min_confidence_to_report": "medium",
+        "notes": "Do not report as confirmed on indicator match alone. Baseline/control must be clean.",
+        "differential_check": {
+          "description": "'$gt'/'$ne' appearing in error messages is not evidence of successful injection. Require boolean differential: an always-true operator vs an always-false one should return different result sets.",
+          "true_payload": "{\"$gt\": \"\"}",
+          "false_payload": "{\"$eq\": \"__zzz_nonexistent__\"}",
+          "confirm_if": "response(true_payload) != response(false_payload), both differing from control"
+        }
       }
     },
     {
@@ -532,6 +705,15 @@
           "Upload successful",
           "File uploaded"
         ]
+      },
+      "validation": {
+        "confirmation_mode": "differential",
+        "require_baseline_request": true,
+        "require_control_request": true,
+        "control_payload_template": "ZZZCTRL_DAST-015_ZZZ",
+        "confirmation_rule": "indicator_in_payload_response AND NOT indicator_in_baseline_response AND NOT indicator_in_control_response",
+        "min_confidence_to_report": "medium",
+        "notes": "Do not report as confirmed on indicator match alone. Baseline/control must be clean."
       }
     },
     {
@@ -566,6 +748,24 @@
           "jinja",
           "TemplateError"
         ]
+      },
+      "validation": {
+        "confirmation_mode": "differential",
+        "require_baseline_request": true,
+        "require_control_request": true,
+        "control_payload_template": "ZZZCTRL_DAST-016_ZZZ",
+        "confirmation_rule": "indicator_in_payload_response AND NOT indicator_in_baseline_response AND NOT indicator_in_control_response",
+        "min_confidence_to_report": "medium",
+        "notes": "Do not report as confirmed on indicator match alone. Baseline/control must be clean.",
+        "differential_check": {
+          "description": "This is the rule responsible for the ICFRE false positive. '49' alone is not evidence \u2014 it can appear as a static number anywhere in a page. Require: (1) control marker unreflected check, (2) a math-vs-string differential ({{7*7}} => 49 AND {{7*'7'}} => 7777777), (3) engine-syntax specificity \u2014 a genuine hit should only fire on the syntax matching the actual backend engine, not on Jinja2 AND Freemarker AND Velocity AND Smarty AND ERB simultaneously.",
+          "control_marker": "SSTICTRL_DAST-016_XYZ",
+          "numeric_payload": "{{7*7}}",
+          "numeric_expect": "49",
+          "string_differential_payload": "{{7*'7'}}",
+          "string_differential_expect": "7777777",
+          "confirm_if": "control_marker not reflected in baseline AND numeric_expect found in numeric_payload response AND string_differential_expect found in string_differential_payload response AND only one engine syntax family shows evaluation"
+        }
       }
     },
     {
@@ -577,7 +777,7 @@
       "description": "Detects HTTP request smuggling vulnerabilities.",
       "poc_template": {
         "language": "python",
-        "code": "import requests\n\n# HTTP Request Smuggling PoC requires raw HTTP request crafting\n# Use this script as a template to craft CL.TE/TE.CL requests\nprint(\"[!] Request Smuggling detected — manual PoC required.\")"
+        "code": "import requests\n\n# HTTP Request Smuggling PoC requires raw HTTP request crafting\n# Use this script as a template to craft CL.TE/TE.CL requests\nprint(\"[!] Request Smuggling detected \u2014 manual PoC required.\")"
       },
       "attack_vectors": [
         {
@@ -596,6 +796,15 @@
           "Invalid request",
           "Bad Gateway"
         ]
+      },
+      "validation": {
+        "confirmation_mode": "differential",
+        "require_baseline_request": true,
+        "require_control_request": true,
+        "control_payload_template": "ZZZCTRL_DAST-017_ZZZ",
+        "confirmation_rule": "indicator_in_payload_response AND NOT indicator_in_baseline_response AND NOT indicator_in_control_response",
+        "min_confidence_to_report": "medium",
+        "notes": "Do not report as confirmed on indicator match alone. Baseline/control must be clean."
       }
     },
     {
@@ -625,6 +834,15 @@
           "Access-Control-Allow-Origin: https://evil.com",
           "Access-Control-Allow-Origin: *"
         ]
+      },
+      "validation": {
+        "confirmation_mode": "differential",
+        "require_baseline_request": true,
+        "require_control_request": true,
+        "control_payload_template": "ZZZCTRL_DAST-018_ZZZ",
+        "confirmation_rule": "indicator_in_payload_response AND NOT indicator_in_baseline_response AND NOT indicator_in_control_response",
+        "min_confidence_to_report": "medium",
+        "notes": "Do not report as confirmed on indicator match alone. Baseline/control must be clean."
       }
     },
     {
@@ -654,6 +872,15 @@
           "multiple requests",
           "race condition"
         ]
+      },
+      "validation": {
+        "confirmation_mode": "differential",
+        "require_baseline_request": true,
+        "require_control_request": true,
+        "control_payload_template": "ZZZCTRL_DAST-019_ZZZ",
+        "confirmation_rule": "indicator_in_payload_response AND NOT indicator_in_baseline_response AND NOT indicator_in_control_response",
+        "min_confidence_to_report": "medium",
+        "notes": "Do not report as confirmed on indicator match alone. Baseline/control must be clean."
       }
     },
     {
@@ -684,6 +911,15 @@
           "__typename",
           "GraphQL"
         ]
+      },
+      "validation": {
+        "confirmation_mode": "differential",
+        "require_baseline_request": true,
+        "require_control_request": true,
+        "control_payload_template": "ZZZCTRL_DAST-020_ZZZ",
+        "confirmation_rule": "indicator_in_payload_response AND NOT indicator_in_baseline_response AND NOT indicator_in_control_response",
+        "min_confidence_to_report": "medium",
+        "notes": "Do not report as confirmed on indicator match alone. Baseline/control must be clean."
       }
     },
     {
@@ -714,6 +950,20 @@
           "LDAP",
           "evil.com"
         ]
+      },
+      "validation": {
+        "confirmation_mode": "differential",
+        "require_baseline_request": true,
+        "require_control_request": true,
+        "control_payload_template": "ZZZCTRL_DAST-021_ZZZ",
+        "confirmation_rule": "indicator_in_payload_response AND NOT indicator_in_baseline_response AND NOT indicator_in_control_response",
+        "min_confidence_to_report": "medium",
+        "notes": "Do not report as confirmed on indicator match alone. Baseline/control must be clean.",
+        "differential_check": {
+          "description": "The strings 'JNDI'/'LDAP'/'evil.com' appearing in a response body do NOT indicate exploitation \u2014 Log4j JNDI injection is blind by design and confirmed via an out-of-band callback, not in-band text matching.",
+          "oob_payload_template": "${jndi:ldap://{oob_domain}/a}",
+          "confirm_if": "inbound LDAP/DNS callback received at oob_domain \u2014 in-band text match alone is NEVER sufficient evidence for this rule"
+        }
       }
     },
     {
@@ -746,7 +996,26 @@
           "credit card",
           "SSN"
         ]
+      },
+      "validation": {
+        "confirmation_mode": "differential",
+        "require_baseline_request": true,
+        "require_control_request": true,
+        "control_payload_template": "ZZZCTRL_DAST-022_ZZZ",
+        "confirmation_rule": "indicator_in_payload_response AND NOT indicator_in_baseline_response AND NOT indicator_in_control_response",
+        "min_confidence_to_report": "medium",
+        "notes": "Do not report as confirmed on indicator match alone. Baseline/control must be clean.",
+        "differential_check": {
+          "description": "Words like 'SSN' or 'secret' can appear in filenames, labels, or unrelated boilerplate text. Require pattern-based matching (e.g. regex for actual SSN format \\d{3}-\\d{2}-\\d{4}, real API-key-shaped tokens) rather than bare keyword substring matching.",
+          "confirm_if": "response matches a structured sensitive-data pattern (regex), not just a keyword substring"
+        }
       }
+    }
+  ],
+  "changelog": [
+    {
+      "version": "3.1",
+      "notes": "Added a 'validation' block to every rule requiring baseline + control requests before a finding can be marked confirmed, plus rule-specific differential checks (boolean-true/false pairs, OOB callbacks, or structured pattern matching) for the rules most prone to substring-match false positives: SQLi, XSS, SSRF, Path Traversal, Command Injection, XXE, LDAP, XPATH, NoSQL, SSTI, Log4j, Sensitive Data Exposure. Prompted by a 438/439 false-positive rate on a live scan where 'indicator in response.text' alone was used as the confirmation check (e.g. SSTI rule DAST-016 flagging on a bare '49' substring)."
     }
   ]
 }
