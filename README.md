@@ -1,9 +1,10 @@
-⚔️ SUDARSHAN v3.1
+### ⚔️ SUDARSHAN v3.1
 
 Enterprise-Grade Dynamic Application Security Testing Engine
 
+### Author: Nilanjan Chowdhury (@CalculusGuy)
 <p align="center">
-  <b>Scan. Detect. Validate. Prove. Report. Secure.</b>
+  <strong>Scan. Detect. Validate. Prove. Report. Secure.</strong>
 </p>
 
 <p align="center">
@@ -19,15 +20,85 @@ Enterprise-Grade Dynamic Application Security Testing Engine
 
 <p align="center">
   A Python-based DAST engine for automated web application security assessment,
-  vulnerability discovery, validation, PoC generation, evidence collection,
+  vulnerability discovery, finding validation, PoC generation, evidence collection,
   and structured security reporting.
 </p>
 
+Table of Contents
+
 Overview
 
-SUDARSHAN is a modular Dynamic Application Security Testing (DAST) engine designed to automate security testing of web applications.
+Key Features
 
-Rather than treating a scanner as a collection of payloads, SUDARSHAN follows an assessment pipeline:
+Workflow
+
+Architecture
+
+Requirements
+
+Installation
+
+Quick Start
+
+Complete Scan Procedure
+
+CLI Reference
+
+Vulnerability Coverage
+
+Finding Validation
+
+PoC Generation
+
+Reporting
+
+Output Structure
+
+Testing
+
+CI/CD
+
+Project Structure
+
+Technology Stack
+
+Guides
+
+Roadmap
+
+Responsible Use
+
+Author
+
+License
+
+Overview
+
+SUDARSHAN is a modular Dynamic Application Security Testing (DAST) engine written in Python.
+
+It is designed to automate the core stages of a web application security assessment:
+
+Reconnaissance
+
+Endpoint and input discovery
+
+Attack-surface mapping
+
+Vulnerability detection
+
+Finding validation
+
+Evidence collection
+
+Proof-of-concept generation
+
+Risk classification
+
+JSON and HTML reporting
+
+SUDARSHAN is built around an evidence-oriented security workflow, rather than treating a scanner as a simple collection of payloads.
+
+Core Pipeline
 
 Target
   │
@@ -47,41 +118,233 @@ Vulnerability Detection
 Finding Validation
   │
   ▼
-Evidence / PoC Generation
+Evidence Collection
+  │
+  ▼
+PoC Generation
   │
   ▼
 Risk Classification
   │
   ▼
-JSON + HTML Reporting
+JSON / HTML Reporting
 
-Core Capabilities
+Key Features
 
-Modular vulnerability detection rules
+Feature
 
-Concurrent security testing
+Description
 
-Automated finding validation
+22 Security Rules
 
-Evidence collection
+Detection across multiple web vulnerability classes
 
-Runnable proof-of-concept generation
+Web Crawler
 
-JSON and HTML reporting
+Discovers pages, forms, parameters, and inputs
 
-CLI and API interfaces
+Concurrent Scanning
 
-Automated testing with pytest
+Uses ThreadPoolExecutor for parallel checks
 
-GitHub Actions CI/CD integration
+Validation Pipeline
 
-Quick Start
+Separates detection from finding validation
+
+Evidence Collection
+
+Preserves request/response evidence
+
+PoC Generation
+
+Generates runnable validation scripts
+
+JSON Reporting
+
+Machine-readable output for automation
+
+HTML Reporting
+
+Human-readable security reports
+
+CLI
+
+Configurable scans from the terminal
+
+API Wrapper
+
+API-oriented interface around the engine
+
+Automated Tests
+
+pytest test suite
+
+GitHub Actions
+
+CI/CD testing workflow
+
+MIT Licensed
+
+Open-source licensing
+
+Workflow
+
+End-to-End Assessment Flow
+
+flowchart TD
+    A[Target Application] --> B[Reconnaissance]
+    B --> C[Web Crawler]
+    C --> D[Endpoint & Input Discovery]
+    D --> E[Attack Surface Map]
+
+    E --> F[Rule Engine]
+    F --> G[Concurrent Security Checks]
+
+    G --> H{Potential Finding?}
+
+    H -->|No| I[Continue Scan]
+    I --> G
+
+    H -->|Yes| J[Finding Validation]
+
+    J --> K{Validated?}
+
+    K -->|No| L[Discard / Mark Unconfirmed]
+    K -->|Yes| M[Evidence Collection]
+
+    M --> N[PoC Generation]
+    N --> O[Risk Classification]
+    O --> P[JSON Report]
+    O --> Q[HTML Report]
+
+    P --> R[Review & Remediation]
+    Q --> R
+
+    R --> S[Retest]
+    S --> T[Close Finding]
+
+Six Core Stages
+
+Stage
+
+What Happens
+
+Output
+
+1. Recon
+
+Crawler walks the application
+
+Attack surface
+
+2. Detection
+
+Security rules test discovered inputs
+
+Raw findings
+
+3. Validation
+
+Findings are re-checked
+
+Validated findings
+
+4. Evidence
+
+Relevant request/response data is captured
+
+Evidence
+
+5. PoC
+
+Reproducible scripts are generated
+
+pocs/*.py
+
+6. Reporting
+
+Results are exported
+
+JSON + HTML
+
+Security Testing Loop
+
+Discover
+   ↓
+Attack
+   ↓
+Detect
+   ↓
+Validate
+   ↓
+Prove
+   ↓
+Report
+   ↓
+Remediate
+   ↓
+Retest
+
+Architecture
+
+High-Level Architecture
+
+flowchart LR
+    A[CLI / API] --> B[Crawler]
+    B --> C[Attack Surface]
+    C --> D[Rule Engine]
+
+    D --> E[Security Rules]
+    E --> F[Concurrent Execution]
+
+    F --> G[Finding Validation]
+    G --> H[Evidence Layer]
+
+    H --> I[PoC Generator]
+    H --> J[Finding Model]
+
+    J --> K[JSON Reporter]
+    J --> L[HTML Reporter]
+
+    K --> M[Automation / CI]
+    L --> N[Human Review]
+
+Component Responsibilities
+
+SUDARSHAN
+│
+├── Interface
+│   ├── CLI
+│   └── API
+│
+├── Discovery
+│   └── Crawler
+│
+├── Detection
+│   ├── Rule Engine
+│   └── Security Rules
+│
+├── Validation
+│   └── Finding Validation
+│
+├── Evidence
+│   └── PoC Generator
+│
+├── Reporting
+│   ├── JSON
+│   └── HTML
+│
+└── Quality
+    ├── pytest
+    └── GitHub Actions
 
 Requirements
 
+System Requirements
+
 Requirement
 
-Version
+Minimum
 
 Python
 
@@ -89,116 +352,426 @@ Python
 
 pip
 
-Latest
+Latest recommended
 
 Git
 
-Any
+Any recent version
 
-1. Clone
+Network
+
+Required for remote targets
+
+OS
+
+Linux, macOS, or Windows-compatible Python environment
+
+Verify Requirements
+
+python3 --version
+pip3 --version
+git --version
+
+Expected Python version:
+
+Python 3.8+
+
+Installation
+
+1. Clone the Repository
 
 git clone https://github.com/CalculusGuy/SUDARSHAN.git
 cd SUDARSHAN/DAST_Engine
 
-2. Create a virtual environment
+2. Create a Virtual Environment
+
+Linux / macOS
 
 python3 -m venv venv
 source venv/bin/activate
 
-# Windows
-# venv\Scripts\activate
+Windows
 
-3. Install dependencies
+python -m venv venv
+venv\Scripts\activate
+
+Your shell should now show something similar to:
+
+(venv) user@host:~/SUDARSHAN/DAST_Engine$
+
+3. Install Dependencies
 
 pip install --upgrade pip
 pip install -r requirements.txt
 
-4. Verify the CLI
+4. Verify Installation
 
 python main.py --help
 
-5. Run a scan
+If the CLI help is displayed, SUDARSHAN is ready.
+
+Quick Start
+
+Basic Scan
 
 python main.py --target https://example.com
 
-Full scan
+Scan a Local Lab
+
+python main.py --target http://localhost:3000
+
+Scan with Concurrency
 
 python main.py \
-    --target https://example.com \
+    --target http://localhost:3000 \
+    --threads 20
+
+Generate JSON Report
+
+python main.py \
+    --target http://localhost:3000 \
+    --report json
+
+Generate HTML Report
+
+python main.py \
+    --target http://localhost:3000 \
+    --report html
+
+Generate Both Reports
+
+python main.py \
+    --target http://localhost:3000 \
+    --report both
+
+Generate PoCs
+
+python main.py \
+    --target http://localhost:3000 \
+    --poc
+
+Full Scan
+
+python main.py \
+    --target http://localhost:3000 \
     --threads 20 \
     --report both \
     --poc \
-    --insecure \
+    --max-pages 50 \
+    --timeout 15
+
+Complete Scan Procedure
+
+This is the recommended procedure for running a complete assessment.
+
+Step 1 — Prepare the Environment
+
+cd SUDARSHAN/DAST_Engine
+source venv/bin/activate
+
+Verify:
+
+python main.py --help
+
+Step 2 — Select an Authorized Target
+
+Only test applications that you own or have explicit authorization to assess.
+
+Suitable environments include:
+
+Your own local applications
+
+OWASP Juice Shop running locally
+
+Intentionally vulnerable training applications
+
+Authorized bug-bounty targets within scope
+
+Authorized client or organizational systems
+
+Example:
+
+python main.py --target http://localhost:3000
+
+Step 3 — Run Reconnaissance
+
+SUDARSHAN begins by crawling the target and discovering:
+
+Pages
+Forms
+Parameters
+Inputs
+Endpoints
+Attack Surface
+
+Example:
+
+python main.py \
+    --target http://localhost:3000 \
     --max-pages 50
 
-Generated files:
+Step 4 — Execute Security Rules
+
+The rule engine applies the configured vulnerability checks.
+
+Attack Surface
+      │
+      ▼
+  Rule Engine
+      │
+      ├── SQL Injection
+      ├── XSS
+      ├── SSRF
+      ├── Path Traversal
+      ├── Command Injection
+      ├── XXE
+      └── ... 22 classes
+
+Concurrent execution can be enabled with:
+
+--threads 20
+
+Step 5 — Validate Findings
+
+Detected findings are passed through the validation stage.
+
+Detection
+    │
+    ▼
+Potential Finding
+    │
+    ▼
+Validation
+    │
+    ├── Not validated
+    │
+    └── Validated
+            │
+            ▼
+        Evidence
+
+This helps distinguish scanner detections from findings that require further verification.
+
+Step 6 — Generate Evidence and PoCs
+
+Run:
+
+python main.py \
+    --target http://localhost:3000 \
+    --poc
+
+PoCs are written to:
+
+pocs/
+
+Example:
+
+pocs/
+├── poc_DAST-001.py
+├── poc_DAST-002.py
+└── poc_DAST-010.py
+
+Step 7 — Generate Reports
+
+python main.py \
+    --target http://localhost:3000 \
+    --report both
+
+Outputs:
 
 reports/
 ├── report.json
 └── report.html
 
-pocs/
-├── poc_DAST-001.py
-├── poc_DAST-002.py
-└── ...
+Step 8 — Review Results
 
-Scan Workflow
+JSON
 
-SUDARSHAN follows a six-stage security testing workflow:
+Use JSON for:
 
-Stage
+Automation
+
+CI/CD
+
+Dashboards
+
+Data processing
+
+Tool integration
+
+HTML
+
+Use HTML for:
+
+Human review
+
+Security assessment documentation
+
+Finding analysis
+
+Evidence review
+
+Step 9 — Retest
+
+After remediation, run SUDARSHAN again against the authorized target.
+
+python main.py \
+    --target http://localhost:3000 \
+    --report both \
+    --poc
+
+The intended lifecycle is:
+
+Finding
+   ↓
+Remediation
+   ↓
+Retest
+   ↓
+Validation
+   ↓
+Close
+
+CLI Reference
+
+Run:
+
+python main.py --help
+
+Option
 
 Description
 
-Output
+Default
 
-1. Recon
+--target, -t
 
-Crawl pages, forms, and parameters
+Target URL
 
-Attack surface
+Required
 
-2. Detection
+--threads, -th
 
-Execute security rules concurrently
+Concurrent workers
 
-Raw findings
+10
 
-3. Validation
+--report, -r
 
-Re-check detected issues
+json, html, or both
 
-Confirmed findings
+—
 
-4. Evidence
+--report-dir
 
-Capture relevant request/response data
+Report output directory
 
-Evidence records
+reports
 
-5. PoC
+--max-pages, -m
 
-Generate reproducible scripts
+Maximum pages to crawl
 
-pocs/*.py
+10
 
-6. Reporting
+--poc, -p
 
-Export structured results
+Generate PoCs
 
-JSON + HTML
+Disabled
 
-Discover → Attack → Detect → Validate → Prove → Report
+--poc-dir
+
+PoC output directory
+
+pocs
+
+--insecure, -k
+
+Disable TLS verification
+
+Disabled
+
+--timeout
+
+Request timeout in seconds
+
+10
+
+--help, -h
+
+Show CLI help
+
+—
+
+CLI Recipes
+
+Basic
+
+python main.py --target https://example.com
+
+Fast / Concurrent
+
+python main.py \
+    --target https://example.com \
+    --threads 20
+
+Increase Crawl Depth
+
+python main.py \
+    --target https://example.com \
+    --max-pages 50
+
+JSON
+
+python main.py \
+    --target https://example.com \
+    --report json
+
+HTML
+
+python main.py \
+    --target https://example.com \
+    --report html
+
+Both Reports + PoCs
+
+python main.py \
+    --target https://example.com \
+    --report both \
+    --poc
+
+Custom Report Directory
+
+python main.py \
+    --target http://localhost:3000 \
+    --report both \
+    --report-dir ~/assessments/client_2026-09-21
+
+Custom PoC Directory
+
+python main.py \
+    --target http://localhost:3000 \
+    --poc \
+    --poc-dir ~/assessments/client_pocs
+
+Self-Signed Certificate
+
+python main.py \
+    --target https://internal-lab.local \
+    --insecure
+
+--insecure disables TLS certificate verification. Use it only where you are authorized to do so, such as a controlled lab.
 
 Vulnerability Coverage
 
-SUDARSHAN currently implements 22 vulnerability/security detection classes:
+SUDARSHAN currently implements 22 vulnerability/security detection classes.
 
 #
 
 Vulnerability
 
-Scanner Severity
+Severity
 
 01
 
@@ -332,98 +905,73 @@ Sensitive Data Exposure
 
 Medium
 
-Note: Severity represents the scanner's classification and should not be treated as a final risk rating without application-specific context and manual validation.
-
-Architecture
-
-                         ┌─────────────────────┐
-                         │      SUDARSHAN      │
-                         └──────────┬──────────┘
-                                    │
-                  ┌─────────────────┼─────────────────┐
-                  │                 │                 │
-                  ▼                 ▼                 ▼
-             Interface          Discovery         Detection
-             CLI / API           Crawler          Rule Engine
-                                                     │
-                                                     ▼
-                                                22 Rules
-                                                     │
-                  ┌──────────────────────────────────┘
-                  │
-                  ▼
-              Validation
-                  │
-                  ▼
-             Evidence / PoC
-                  │
-                  ▼
-              Reporting
-             ┌────┴────┐
-             ▼         ▼
-           JSON       HTML
-
-Design
-
-SUDARSHAN separates responsibilities into modular components:
-
-Interface
-├── CLI
-└── API
-
-Discovery
-└── Crawler
-
-Detection
-├── Rule Engine
-└── Security Rules
-
-Validation
-└── Finding Validation
-
-Evidence
-└── PoC Generator
-
-Reporting
-├── JSON
-└── HTML
-
-Quality
-├── pytest
-└── GitHub Actions
+Note: Severity is the scanner's classification. It should not be treated as a final risk rating without application-specific context and manual validation.
 
 Concurrent Scanning
 
-SUDARSHAN uses Python's ThreadPoolExecutor to execute independent security checks concurrently.
+SUDARSHAN uses Python's ThreadPoolExecutor to execute independent checks concurrently.
 
-python main.py --target https://example.com --threads 20
+python main.py \
+    --target https://example.com \
+    --threads 20
 
-Concurrency is configurable through the CLI.
+Conceptually:
+
+                  Target
+                    │
+                    ▼
+              Attack Surface
+                    │
+                    ▼
+              ┌───────────┐
+              │ Rule Pool │
+              └─────┬─────┘
+                    │
+       ┌────────────┼────────────┐
+       ▼            ▼            ▼
+    Rule 01      Rule 02      Rule 03
+       │            │            │
+       └────────────┼────────────┘
+                    ▼
+              Finding Results
+
+Concurrency is configurable from the CLI.
 
 Finding Validation
 
-Detection and validation are separate stages.
+Detection and validation are intentionally separated.
 
-Potential Finding
-      │
-      ▼
-Validation
-      │
-      ├── False Positive
-      │
-      └── Valid Finding
-              │
-              ▼
-          Evidence
-              │
-              ▼
-             PoC
+flowchart TD
+    A[Input / Endpoint] --> B[Security Rule]
+    B --> C{Detection}
+    C -->|No signal| D[Continue]
+    C -->|Potential issue| E[Validation]
 
-This architecture provides a foundation for response-diff analysis, replayable evidence, finding deduplication, and confidence scoring.
+    E --> F{Validated?}
+    F -->|No| G[Unconfirmed / Discard]
+    F -->|Yes| H[Evidence]
+    H --> I[PoC]
+    I --> J[Report]
+
+This provides a foundation for:
+
+Response-diff analysis
+
+Confidence scoring
+
+Evidence replay
+
+Finding deduplication
+
+Reproducible validation
 
 PoC Generation
 
-SUDARSHAN can generate runnable proof-of-concept scripts for detected findings.
+SUDARSHAN supports stacked PoC generation.
+
+Instead of producing only raw scanner output, the engine can generate scripts associated with detected vulnerability classes.
+
+Example:
 
 pocs/
 ├── poc_DAST-001.py
@@ -443,19 +991,23 @@ Produce a validation summary
 
 Execute checks concurrently where appropriate
 
-The intended flow is:
+Conceptually:
 
 Scanner Output
       ↓
 Security Finding
       ↓
+Evidence
+      ↓
+Generated PoC
+      ↓
 Reproducible Validation
 
 Reporting
 
-JSON
+JSON Report
 
-Designed for automation, CI/CD pipelines, dashboards, and tool integration.
+Example:
 
 {
   "target": "https://example.com",
@@ -469,107 +1021,41 @@ Designed for automation, CI/CD pipelines, dashboards, and tool integration.
   ]
 }
 
-HTML
+JSON is intended for:
 
-Designed for human review and includes target information, vulnerability type, severity, endpoint, parameter, evidence, scan information, and finding details.
+CI/CD
 
-CLI Reference
+Automation
 
-Option
+Dashboards
 
-Description
+Data processing
 
-Default
+Security-tool integration
 
---target, -t
+HTML Report
 
-Target URL
+The HTML report is intended for human review and includes information such as:
 
-Required
+Target
 
---threads, -th
+Vulnerability type
 
-Concurrent workers
+Severity
 
-10
+Endpoint
 
---report, -r
+Parameter
 
-json, html, or both
+Evidence
 
-—
+Scan information
 
---report-dir
-
-Report output directory
-
-reports
-
---max-pages, -m
-
-Maximum pages to crawl
-
-10
-
---poc, -p
-
-Generate PoCs
-
-Disabled
-
---poc-dir
-
-PoC output directory
-
-pocs
-
---insecure, -k
-
-Disable TLS verification
-
-Disabled
-
---timeout
-
-Request timeout in seconds
-
-10
-
---help, -h
-
-Show help
-
-—
-
-Examples
-
-Basic
-
-python main.py --target https://example.com
-
-Concurrent
-
-python main.py --target https://example.com --threads 20
-
-Generate PoCs
-
-python main.py --target https://example.com --poc
-
-Generate both reports
-
-python main.py --target https://example.com --report both
-
-Full
-
-python main.py \
-    --target https://example.com \
-    --threads 20 \
-    --report both \
-    --poc \
-    --insecure \
-    --max-pages 50
+Finding details
 
 Output Structure
+
+After a scan:
 
 SUDARSHAN/DAST_Engine/
 │
@@ -584,6 +1070,8 @@ SUDARSHAN/DAST_Engine/
 │
 └── logs/
     └── scan_YYYY-MM-DD.log
+
+Finding Structure
 
 A finding contains information such as:
 
@@ -626,7 +1114,7 @@ python main.py \
     --threads 15 \
     --max-pages 20
 
-Example console output:
+Example output:
 
 [+] Found 20 pages, 22 forms
 [INFO] Loaded 22 rules
@@ -637,7 +1125,7 @@ Important: Scanner-reported findings should be manually validated before being t
 
 Testing
 
-Run the test suite with:
+Run the test suite:
 
 pytest
 
@@ -645,11 +1133,13 @@ Verbose mode:
 
 pytest -v
 
+Testing is intended to verify scanner behavior and protect against regressions as new rules and capabilities are added.
+
 CI/CD
 
 SUDARSHAN includes GitHub Actions integration.
 
-Example workflow:
+Example:
 
 name: CI/CD Pipeline
 
@@ -677,6 +1167,28 @@ jobs:
       - name: Run tests
         run: pytest
 
+Workflow:
+
+Push / Pull Request
+        │
+        ▼
+ GitHub Actions
+        │
+        ▼
+ Checkout Repository
+        │
+        ▼
+ Setup Python
+        │
+        ▼
+ Install Dependencies
+        │
+        ▼
+      pytest
+        │
+        ▼
+   Test Result
+
 Project Structure
 
 SUDARSHAN/
@@ -684,6 +1196,7 @@ SUDARSHAN/
 ├── main.py
 ├── app.py
 ├── index.html
+│
 ├── requirements.txt
 ├── LICENSE
 ├── README.md
@@ -708,6 +1221,120 @@ SUDARSHAN/
 │
 ├── reports/
 └── pocs/
+
+Guides
+
+Guide 1 — First Scan
+
+Install
+  ↓
+Clone
+  ↓
+Create venv
+  ↓
+Install requirements
+  ↓
+Run --help
+  ↓
+Choose authorized target
+  ↓
+Run scan
+  ↓
+Review findings
+
+Command sequence:
+
+git clone https://github.com/CalculusGuy/SUDARSHAN.git
+cd SUDARSHAN/DAST_Engine
+
+python3 -m venv venv
+source venv/bin/activate
+
+pip install -r requirements.txt
+
+python main.py --help
+
+python main.py \
+    --target http://localhost:3000 \
+    --report both \
+    --poc
+
+Guide 2 — Local Vulnerable Lab
+
+A recommended workflow is to use an intentionally vulnerable application running locally.
+
+Local Vulnerable App
+        │
+        ▼
+   SUDARSHAN
+        │
+        ├── Crawl
+        ├── Discover
+        ├── Detect
+        ├── Validate
+        └── Report
+
+Example:
+
+python main.py \
+    --target http://localhost:3000 \
+    --threads 20 \
+    --max-pages 50 \
+    --report both \
+    --poc
+
+Guide 3 — Assessment with Custom Output Directories
+
+mkdir -p ~/assessments/client_2026-09-21
+
+python main.py \
+    --target http://localhost:3000 \
+    --report both \
+    --report-dir ~/assessments/client_2026-09-21 \
+    --poc \
+    --poc-dir ~/assessments/client_2026-09-21/pocs
+
+This keeps reports and PoCs separated from the source tree.
+
+Guide 4 — Full Assessment Loop
+
+┌─────────────────────┐
+│  Define Scope       │
+└──────────┬──────────┘
+           ↓
+┌─────────────────────┐
+│  Recon / Discovery  │
+└──────────┬──────────┘
+           ↓
+┌─────────────────────┐
+│  Automated Testing  │
+└──────────┬──────────┘
+           ↓
+┌─────────────────────┐
+│  Validate Findings  │
+└──────────┬──────────┘
+           ↓
+┌─────────────────────┐
+│  Collect Evidence   │
+└──────────┬──────────┘
+           ↓
+┌─────────────────────┐
+│  Generate PoCs      │
+└──────────┬──────────┘
+           ↓
+┌─────────────────────┐
+│  Generate Reports   │
+└──────────┬──────────┘
+           ↓
+┌─────────────────────┐
+│  Remediate          │
+└──────────┬──────────┘
+           ↓
+┌─────────────────────┐
+│  Retest             │
+└──────────┬──────────┘
+           ↓
+      Close Finding
 
 Technology Stack
 
@@ -753,39 +1380,47 @@ MIT
 
 Design Principles
 
-Modular
+1. Modular
 
 Security rules are isolated so new detection capabilities can be added without rewriting the scanner.
 
-Extensible
+2. Extensible
 
 The architecture allows future components such as authentication, session handling, API testing, GraphQL, WebSockets, CVSS, SARIF, evidence replay, and scan history.
 
-Concurrent
+3. Concurrent
 
 Independent security checks can execute in parallel to reduce scan time.
 
-Structured
+4. Structured
 
 Findings are represented as structured security data rather than plain console output.
 
-Automation-Friendly
+5. Automation-Friendly
 
-JSON output and CLI execution make SUDARSHAN suitable for security automation and CI/CD workflows.
+JSON output and CLI execution make the scanner suitable for security automation and CI/CD workflows.
 
-Validation-Oriented
+6. Validation-Oriented
 
-The long-term direction is:
+The long-term direction is to move beyond:
 
-Potential Finding
-      ↓
+"Potential vulnerability detected"
+
+toward:
+
+Vulnerability Detected
+        ↓
 Evidence Collected
-      ↓
+        ↓
 PoC Generated
-      ↓
+        ↓
 Finding Tracked
-      ↓
+        ↓
 Remediation Verified
+        ↓
+Retest
+        ↓
+Closed
 
 Roadmap
 
@@ -865,7 +1500,9 @@ Security gates
 
 Pipeline failure thresholds
 
-Future Direction
+Future Architecture
+
+The long-term direction of SUDARSHAN is:
 
 Discover
    ↓
@@ -911,6 +1548,8 @@ Cybersecurity Researcher & Security Tool Builder
 
 Application Security · DAST · Web Security
 AI Security · Red Teaming · Security Engineering
+
+Links
 
 GitHub: https://github.com/CalculusGuy/SUDARSHAN
 
