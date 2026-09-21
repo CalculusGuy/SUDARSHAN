@@ -1,38 +1,27 @@
-# ⚔️ SUDARSHAN v3.1
+# SUDARSHAN v3
 
 ### Dynamic Application Security Testing Engine
 
-<p align="center">
-  <b>Scan. Detect. Validate. Prove. Report.</b>
-</p>
+### Author: Nilanjan Chowdhury (@CalculusGuy)
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Python-3.x-3776AB?style=for-the-badge&logo=python&logoColor=white">
-  <img src="https://img.shields.io/badge/DAST-Web%20Security-DC2626?style=for-the-badge">
-  <img src="https://img.shields.io/badge/Rules-22-7C3AED?style=for-the-badge">
-  <img src="https://img.shields.io/badge/License-MIT-F59E0B?style=for-the-badge">
-</p>
+**SUDARSHAN** is a Python-based DAST engine designed to discover, detect, validate, and report web application vulnerabilities.
+
+> **Scan → Detect → Validate → Prove → Report**
 
 ---
 
-## Overview
+## Features
 
-**SUDARSHAN** is a Python-based **Dynamic Application Security Testing (DAST)** engine for automated web application security assessment.
-
-It combines crawling, vulnerability detection, validation, evidence collection, PoC generation, and structured reporting into a single workflow.
-
-### Key Features
-
-* 22 vulnerability detection classes
-* Web crawling and attack-surface discovery
+* Automated web application crawling
+* Modular vulnerability detection rules
 * Concurrent security testing
-* Finding validation
-* Evidence collection
-* Automated PoC generation
-* JSON + HTML reports
-* CLI-based scanning
-* `pytest` test suite
-* GitHub Actions CI/CD
+* Dedicated finding validation
+* Evidence and PoC generation
+* JSON reporting
+* HTML reporting
+* Baseline/control/attack validation
+* Automated tests
+* CLI and API support
 
 ---
 
@@ -40,21 +29,35 @@ It combines crawling, vulnerability detection, validation, evidence collection, 
 
 ```mermaid
 flowchart LR
-    A[Target] --> B[Recon & Crawling]
-    B --> C[Endpoint Discovery]
+    A[Target URL] --> B[Crawler]
+    B --> C[Endpoint & Input Discovery]
     C --> D[Attack Surface]
-    D --> E[Security Rules]
-    E --> F[Finding Validation]
-    F --> G[Evidence]
-    G --> H[PoC Generation]
-    H --> I[JSON / HTML Report]
-    I --> J[Review & Retest]
+    D --> E[Security Engine]
+    E --> F[Vulnerability Rules]
+    F --> G[Validator]
+    G --> H[Evidence & PoC]
+    H --> I[Reporter]
+    I --> J[JSON / HTML Report]
 ```
 
 ### Pipeline
 
 ```text
-Discover → Detect → Validate → Prove → Report → Retest
+Target
+  ↓
+Crawler
+  ↓
+Discovery
+  ↓
+Attack Surface Mapping
+  ↓
+Detection Engine
+  ↓
+Validation
+  ↓
+Evidence / PoC
+  ↓
+Report
 ```
 
 ---
@@ -62,45 +65,58 @@ Discover → Detect → Validate → Prove → Report → Retest
 ## Architecture
 
 ```text
-                    SUDARSHAN
-                        │
-          ┌─────────────┴─────────────┐
-          │                           │
-       Crawler                    Rule Engine
-          │                           │
-          └─────────────┬─────────────┘
-                        ▼
-                  Finding Engine
-                        │
-                  ┌─────┴─────┐
-                  ▼           ▼
-              Validation   Evidence
-                  │           │
-                  └─────┬─────┘
-                        ▼
-                   PoC Generator
-                        │
-                 ┌──────┴──────┐
-                 ▼             ▼
-               JSON           HTML
-              Report         Report
+SUDARSHAN
+│
+├── crawler/          → Web crawling & discovery
+├── engine/           → Detection engine
+├── rules/            → Vulnerability rules
+├── validator/        → Finding validation
+│   └── checks/       → SQLi, XSS, SSRF, SSTI, IDOR, CMDi
+├── reporter/         → Reports & PoCs
+├── utils/            → Supporting analysis
+├── tests/            → Automated tests
+│
+├── main.py           → CLI entry point
+├── app.py            → API / application interface
+└── index.html        → Web interface
 ```
+
+---
+
+## Supported Vulnerability Classes
+
+SUDARSHAN currently includes rules for:
+
+* SQL Injection
+* Cross-Site Scripting (XSS)
+* SSRF
+* Path Traversal
+* Command Injection
+* XXE
+* CSRF
+* JWT Weaknesses
+* Open Redirect
+* IDOR
+* LDAP Injection
+* XPath Injection
+* Host Header Injection
+* NoSQL Injection
+* Unrestricted File Upload
+* SSTI
+* HTTP Request Smuggling
+* CORS Misconfiguration
+* Race Conditions
+* GraphQL Injection
+* Log4Shell
+* Sensitive Data Exposure
 
 ---
 
 ## Requirements
 
-* Python **3.8+**
+* Python 3.8+
 * pip
 * Git
-
-Check your environment:
-
-```bash
-python3 --version
-pip3 --version
-git --version
-```
 
 ---
 
@@ -108,7 +124,7 @@ git --version
 
 ```bash
 git clone https://github.com/CalculusGuy/SUDARSHAN.git
-cd SUDARSHAN/DAST_Engine
+cd SUDARSHAN
 
 python3 -m venv venv
 source venv/bin/activate
@@ -116,7 +132,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Verify:
+Check the CLI:
 
 ```bash
 python main.py --help
@@ -124,7 +140,7 @@ python main.py --help
 
 ---
 
-## Quick Start
+## Usage
 
 ### Basic Scan
 
@@ -136,123 +152,27 @@ python main.py --target https://example.com
 
 ```bash
 python main.py \
-    --target http://localhost:3000 \
-    --threads 20 \
-    --max-pages 50 \
-    --report both \
-    --poc
-```
-
-Output:
-
-```text
-reports/
-├── report.json
-└── report.html
-
-pocs/
-├── poc_DAST-001.py
-└── ...
-```
-
----
-
-## CLI
-
-| Option         | Description               |
-| -------------- | ------------------------- |
-| `--target`     | Target URL                |
-| `--threads`    | Concurrent workers        |
-| `--max-pages`  | Maximum pages to crawl    |
-| `--report`     | `json`, `html`, or `both` |
-| `--report-dir` | Report directory          |
-| `--poc`        | Generate PoCs             |
-| `--poc-dir`    | PoC directory             |
-| `--insecure`   | Disable TLS verification  |
-| `--timeout`    | Request timeout           |
-
-Example:
-
-```bash
-python main.py \
-    --target http://localhost:3000 \
+    --target https://example.com \
     --threads 20 \
     --report both \
-    --poc
+    --poc \
+    --max-pages 50
 ```
 
----
+### Useful Options
 
-## Vulnerability Coverage
-
-SUDARSHAN currently includes **22 detection classes**:
-
-```text
-SQL Injection
-Cross-Site Scripting (XSS)
-SSRF
-Path Traversal
-Command Injection
-XXE
-CSRF
-JWT Weakness
-Open Redirect
-IDOR
-LDAP Injection
-XPath Injection
-Host Header Injection
-NoSQL Injection
-Unrestricted File Upload
-SSTI
-HTTP Request Smuggling
-CORS Misconfiguration
-Race Condition
-GraphQL Injection
-Log4Shell
-Sensitive Data Exposure
-```
-
----
-
-## Reports & PoCs
-
-### JSON
-
-Machine-readable output for automation and CI/CD.
-
-### HTML
-
-Human-readable security assessment report.
-
-### PoCs
-
-Generated scripts can be used to reproduce and validate detected findings.
-
-```text
-Finding
-   ↓
-Evidence
-   ↓
-Generated PoC
-   ↓
-Manual Validation
-```
-
----
-
-## Testing
-
-Run the test suite:
-
-```bash
-pytest
-```
-
-Verbose:
-
-```bash
-pytest -v
-```
+| Option         | Description              |
+| -------------- | ------------------------ |
+| `--target`     | Target URL               |
+| `--threads`    | Concurrent workers       |
+| `--report`     | JSON / HTML / both       |
+| `--report-dir` | Report output directory  |
+| `--max-pages`  | Maximum pages to crawl   |
+| `--poc`        | Generate PoCs            |
+| `--poc-dir`    | PoC output directory     |
+| `--insecure`   | Disable TLS verification |
+| `--timeout`    | Request timeout          |
+| `--help`       | Show help                |
 
 ---
 
@@ -260,68 +180,138 @@ pytest -v
 
 ```text
 SUDARSHAN/
+├── .github/workflows/
+├── crawler/
+│   └── crawler.py
+├── engine/
+│   └── engine.py
+├── reporter/
+│   ├── poc_generator.py
+│   └── reporter.py
+├── rules/
+│   └── dast_rules.json
+├── validator/
+│   ├── checks/
+│   │   ├── cmdi.py
+│   │   ├── idor.py
+│   │   ├── sqli.py
+│   │   ├── ssrf.py
+│   │   ├── ssti.py
+│   │   └── xss.py
+│   ├── http_client.py
+│   ├── result.py
+│   └── validator.py
+├── utils/
+│   └── diff_analyzer.py
+├── tests/
+│   ├── conftest.py
+│   └── test_scanner.py
 ├── main.py
 ├── app.py
-├── crawler/
-├── engine/
-├── rules/
-├── reporter/
-├── tests/
-├── reports/
-├── pocs/
+├── index.html
 ├── requirements.txt
-└── README.md
+├── render.yaml
+└── Procfile
 ```
 
 ---
 
-## Roadmap
+## Validation
 
-* [x] Core DAST engine
-* [x] 22 vulnerability classes
-* [x] Concurrent scanning
-* [x] Finding validation
-* [x] PoC generation
-* [x] JSON / HTML reporting
-* [x] Automated testing
-* [x] CI/CD
-* [ ] Authentication-aware scanning
-* [ ] API security testing
-* [ ] Finding deduplication
-* [ ] Evidence replay
-* [ ] SARIF output
-* [ ] Security gates
+SUDARSHAN separates **detection** from **validation**.
+
+```text
+Detection
+    ↓
+Potential Finding
+    ↓
+Validator
+    ↓
+Control / Baseline Comparison
+    ↓
+Confirmed Finding
+    ↓
+Evidence
+    ↓
+PoC / Report
+```
+
+Dedicated validators currently include:
+
+```text
+SQLi
+XSS
+SSRF
+SSTI
+IDOR
+Command Injection
+```
+
+---
+
+## Reports
+
+SUDARSHAN can generate:
+
+* JSON reports
+* HTML reports
+* Finding evidence
+* Proof-of-concept outputs
+
+Example output:
+
+```text
+reports/
+├── report.json
+└── report.html
+
+pocs/
+└── vulnerability-specific PoCs
+```
+
+---
+
+## Testing
+
+Run the test suite with:
+
+```bash
+pytest
+```
 
 ---
 
 ## Responsible Use
 
-**Only scan systems you own or have explicit authorization to test.**
+SUDARSHAN is intended for **authorized security testing only**.
 
-Do not use SUDARSHAN for unauthorized scanning, destructive testing, unauthorized data access, or disruption of production systems.
+Only scan applications that you own or have explicit permission to test.
+
+Do not use the tool to:
+
+* Access unauthorized systems
+* Steal or modify data
+* Disrupt production services
+* Bypass security controls without authorization
+* Perform destructive testing without approval
 
 ---
 
-## Author
+## Project
 
-### Nilanjan Chowdhury
+**Author:** Nilanjan Chowdhury
 
-**Cybersecurity Researcher & Security Tool Builder**
+**Repository:**
+https://github.com/CalculusGuy/SUDARSHAN
 
-* GitHub: https://github.com/CalculusGuy
-* Project: https://github.com/CalculusGuy/SUDARSHAN
-* Live Demo: https://sudarshan-api-z66i.onrender.com/
-* Portfolio: https://calculusguy.github.io/nilanjanchowdhury.github.io/
+**Live Demo:**
+https://sudarshan-api-z66i.onrender.com/
+
+**Portfolio:**
+https://calculusguy.github.io/nilanjanchowdhury.github.io/
 
 ---
 
 ## License
 
-Released under the **MIT License**.
-
----
-
-<p align="center">
-  <b>⚔️ SUDARSHAN</b><br>
-  Automated Web Security. Engineered for Scale.
-</p>
+MIT License
